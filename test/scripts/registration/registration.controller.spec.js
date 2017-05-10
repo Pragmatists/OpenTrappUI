@@ -36,6 +36,24 @@ describe('Registration Controller should', function () {
         expect(worklog.refresh).toHaveBeenCalled();
     });
 
+    it('enables new projects when logging work', function () {
+        var controller = newRegistrationController();
+        scope.workLogExpression = '2h #ProjectManhattan #ProjectAlfa @2014/01/03';
+        httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
+            projectNames: ['ProjectManhattan', 'ProjectAlfa'],
+            workload: '2h',
+            day: '2014/01/03'
+        }).respond(200);
+
+        controller.logWork();
+        httpBackend.flush();
+
+        expect(worklog.projects).toEqual({
+            ProjectManhattan : {active : true},
+            ProjectAlfa : {active : true}
+        });
+    });
+
     it("initializes workload with current month", function () {
         httpBackend.expectGET("http://localhost:8080/endpoints/v1/calendar/2014/01/work-log/entries").respond(200);
 

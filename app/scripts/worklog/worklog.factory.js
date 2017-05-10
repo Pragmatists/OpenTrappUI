@@ -106,6 +106,11 @@ angular
                 });
                 apply();
             },
+            enableProjectsWithoutRefresh: function (projectNames) {
+                _(projectNames).forEach(function (project) {
+                    that.projects[project] = {active: true};
+                });
+            },
             disableAllProjects: function () {
                 _(that.projects).forEach(function (status) {
                     status.active = false;
