@@ -45,6 +45,7 @@ angular
                         type: 'success',
                         message: $sce.trustAsHtml(message)
                     }];
+                    worklog.enableProjectsWithoutRefresh(data.projectNames);
                     worklog.refresh();
                 })
                 .catch(function () {
