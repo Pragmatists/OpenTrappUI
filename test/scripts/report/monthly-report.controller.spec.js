@@ -86,6 +86,30 @@ describe('MonthlyReportController', function () {
             .toEqual({"2014/01/01": "3.5", "2014/01/02": "7.33", "total": "10.83"});
     });
 
+    it("calculates total when workloads are non-positive", function () {
+
+        // given:
+        worklog.entries = [
+            {
+                day: "2014/01/02",
+                employee: "bart.simpson",
+                workload: "2h 30m"
+            },
+            {
+                day: "2014/01/02",
+                employee: "bart.simpson",
+                workload: ""
+            }
+        ];
+
+        // when:
+        var controller = newMonthlyReportController();
+
+        // then:
+        expect(controller.report.total())
+            .toEqual({"2014/01/02": "2.5", "total": "2.5"});
+    });
+
     it("rounds to hours only once", function () {
         worklog.entries = [
             {

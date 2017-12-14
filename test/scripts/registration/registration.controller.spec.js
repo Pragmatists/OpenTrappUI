@@ -72,7 +72,7 @@ describe('Registration Controller should', function () {
         httpBackend.verifyNoOutstandingExpectation();
     });
 
-    it('clear input after successfull submit', function () {
+    it('clear input after successful submit', function () {
         var controller = newRegistrationController();
         scope.workLogExpression = '2h #ProjectManhattan @2014/01/03';
         httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
