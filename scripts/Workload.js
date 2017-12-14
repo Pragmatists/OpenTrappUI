@@ -2,7 +2,9 @@ var Workload = function (workload) {
 
     var workloadAsMinutes = 0;
 
-    if (isNaN(workload)) {
+    if (!workload) {
+        workloadAsMinutes = 0;
+    } else if (isNaN(workload)) {
         var expression = workload
             .replace("m", "")
             .replace("h", "*60")
@@ -26,20 +28,20 @@ var Workload = function (workload) {
 
     function printMinutes() {
         var minutes = workloadAsMinutes % 60;
-        return minutes == 0 ? "" : minutes + "m";
+        return minutes === 0 ? "" : minutes + "m";
     }
 
     function printHours() {
-        if (workloadAsMinutes == 0) {
+        if (workloadAsMinutes === 0) {
             return "0h";
         }
         var hours = hoursInMinutes(workloadAsMinutes) % 8;
-        return hours == 0 ? "" : hours + "h";
+        return hours === 0 ? "" : hours + "h";
     }
 
     function printDays() {
         var days = daysInHours(hoursInMinutes(workloadAsMinutes));
-        return days == 0 ? "" : days + "d";
+        return days === 0 ? "" : days + "d";
     }
 
     function hoursInMinutes(minutes) {
