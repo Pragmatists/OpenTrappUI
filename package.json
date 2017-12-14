@@ -11,7 +11,7 @@
     "grunt-contrib-connect": "1.0.2",
     "grunt-eslint": "18.1.0",
     "grunt-exec": "0.4.7",
-    "grunt-gh-pages": "1.1.0",
+    "grunt-gh-pages": "2.0.0",
     "grunt-karma": "1.0.0",
     "jasmine-core": "2.4.1",
     "karma": "0.13.18",
