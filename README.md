@@ -21,9 +21,22 @@ Open Time Registration Application
 
 `npm test` or `grunt`
 
-### Run local server
+## starting with fake backend serving API
 
-`npm start` or `grunt server`
+### Run local web application
+
+`npm start` or `grunt server`  
+
+### Run local fake API server
+`npm install -g json-server`  
+`grunt api` 
+
+### Run local fake API together with web application
+
+`grunt all` 
+
+* change cookie: apiServerUrl to localhost:3000 to use local backend server
+
 
 ### Other available tasks
 

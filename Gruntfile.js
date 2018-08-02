@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     var libPath = 'app/lib';
 
     grunt.initConfig({
-        bower: {
+        'bower': {
             dev: {
                 dest: libPath,
                 options: {
@@ -47,7 +47,7 @@ module.exports = function (grunt) {
         'eslint': {
             target: ['./']
         },
-        karma: {
+        'karma': {
             unit: {
                 configFile: 'test/karma.conf.js'
             },
@@ -96,6 +96,17 @@ module.exports = function (grunt) {
                     var outputParser = "app" + path.sep + "lib" + path.sep + "PegWorkLogEntryParser.js";
                     return pegjs + " " + parserVar + " " + inputGrammar + " " + outputParser;
                 }
+            },
+            'json_server': {
+                cmd: 'node api/server.js'
+            }
+        },
+        'concurrent': {
+            'server': {
+                tasks: ['connect:server', 'exec:json_server'],
+                options: {
+                    logConcurrentOutput: true
+                }
             }
         }
     });
@@ -110,6 +121,7 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-bower');
+    grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-connect');
@@ -117,6 +129,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('default', ['cleanLib', 'bower', 'exec:generate_parser', 'eslint', 'karma:unit']);
-
     grunt.registerTask('server', ["default", 'connect']);
+    grunt.registerTask('api', ['exec:json_server']);
+    grunt.registerTask('all', ['concurrent:server']);
 };
