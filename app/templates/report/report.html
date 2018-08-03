@@ -6,7 +6,7 @@
                     <small>by month, project and employee</small>
                     <div class="pull-right">
                         <!-- TODO use router on state or component instead of one attached to view -->
-                        <button ng-controller="BulkEditCtrl as bulkEdit" class="btn btn-sm btn-primary"
+                        <button data-toggle="tooltip" title="Bulk edit entries that meet chosen criteria" ng-controller="BulkEditCtrl as bulkEdit" class="btn btn-sm btn-primary"
                                 ng-click="bulkEdit.open(bulkEdit.query())">
                             <span class="glyphicon glyphicon-pencil small-glyph"></span> Bulk edit
                         </button>
