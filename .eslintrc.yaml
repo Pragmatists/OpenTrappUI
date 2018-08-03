@@ -1,0 +1,63 @@
+---
+root: false
+
+plugins: [ angular ]
+
+globals:
+  "_": false
+  "angular": false
+  # TODO remove global Chart
+  "Chart": false
+  # TODO use angular-moment to prevent global moment usage
+  "moment": false
+  # TODO do we really need global PegWorkLogEntryParser function
+  "PegWorkLogEntryParser": false
+  # TODO do we really need global sprintf function
+  "sprintf": false
+  # TODO do we really need global Workload function
+  "Workload": false
+
+rules:
+  angular/angularelement: error
+  # TODO increase to "error"
+  angular/controller-as: warn
+  # TODO increase to "error"
+  angular/controller-as-route: warn
+  angular/definedundefined: error
+  angular/document-service: error
+  angular/deferred: error
+  angular/di-unused: warn
+  angular/directive-restrict: error
+  angular/foreach: error
+  angular/interval-service: error
+  angular/json-functions: error
+  angular/log: error
+  angular/module-dependency-order:
+    - error
+    - grouped: true
+      prefix: "openTrapp"
+  angular/module-name:
+    - error
+    - "openTrapp"
+  angular/module-getter: error
+  angular/module-setter: error
+  angular/no-angular-mock: error
+  angular/no-cookiestore : error
+  angular/no-directive-replace: warn
+  angular/no-http-callback: error
+  angular/no-inline-template: error
+  angular/no-jquery-angularelement: error
+  angular/no-private-call: error
+  # TODO increase to "error"
+  angular/no-services: warn
+  angular/no-service-method: error
+  angular/on-watch: error
+  angular/timeout-service: error
+  angular/typecheck-array: error
+  angular/typecheck-date : error
+  angular/typecheck-function: error
+  angular/typecheck-number: error
+  angular/typecheck-object: error
+  angular/typecheck-string: error
+  angular/watchers-execution: error
+  angular/window-service: error
