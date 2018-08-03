@@ -1,5 +1,16 @@
 language: node_js
 node_js:
-  - 6.2.0
-  - 8.11.3
-  - 9.4.0
+- 6.2.0
+- 8.11.3
+- 9.4.0
+githubToken:
+  matrix:
+    secure: Ev7fqPUVY7z56mjl18mtom2cTEU0R8gq6sIOM6x+/DChiR6srD2jdDkJ+8R317wLcnyqlJjIgSQWXwJcr8rAkaCgrd9PnAR3YWPkC9YdFhCNsfabZq/yLiZ44ay+/LXrJ/MzZi1C/J8Zlp0cbv+td0hFO9hVsMxAcarrlEPWAWI=
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  on:
+    branch: master
+  local-dir: app
