@@ -111,6 +111,13 @@ describe("WorklogExpressionDirective", function () {
         expect(suggestions).toBeResolvedWith(["monday", "tuesday"]);
     });
 
+    it("completes suggestion", function () {
+        projectsReturnedByHttpAre(['trainings', 'training']);
+        userTypes("#trainings #train")
+        scope.selectSuggestion("training");
+        expect(scope.workLogExpression).toEqual("#trainings #training");
+    });
+
     function projectsReturnedByHttpAre(namesOfAvailableProjects) {
         $httpBackend
             .whenGET("http://localhost:8080/endpoints/v1/projects/")
