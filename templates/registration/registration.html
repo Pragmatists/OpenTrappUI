@@ -12,7 +12,12 @@
             <div class="col-md-10 col-md-offset-1">
                 <h2 class="page-header">Report your time
                     <small>using our expression language, to make it quick!</small>
+                    <button class="btn btn-lg btn-default glyphicon glyphicon-list-alt" data-toggle="modal" data-target="#modalRules"
+                                    style="height:46px; margin-left: -4px; z-index: 3; color: #2b669a; font-weight: bold;"
+                                    type="button">
+                            </button>
                 </h2>
+                
             </div>
         </div>
         <div class="row">
@@ -40,7 +45,7 @@
                                         style="height:46px; margin-left: -4px; z-index: 3; color: #2b669a; font-weight: bold;"
                                         type="button">?
 								</button>
-						</span>
+                        </span>
 
                         </div>
 
@@ -107,6 +112,70 @@
                             <code>1d #main-project #sub-project @today</code>
                             <p>Report <strong>8 hours </strong> to <strong>main-project</strong>, precisely <strong>sub-project</strong>
                                 for <strong>today</strong> (8 hours total, not 16).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalRules" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Zasady</h2>
+                </div>
+                <div class="modal-body">
+                    <div id="examples">
+                        <div class="example">
+                            <p>Rejestrowanie dla <strong>projektu</strong>, np.:</p>
+                            <code>#projects #rightmove</code>
+                            <code>#projects #talkie</code>
+                        </div>
+                    </br>
+                        <div class="example">
+                            <p>Rejestrowanie <strong>prowadzenia szkolenia</strong>, np:</p>
+                            <code>#trainings #open-training</code>
+                            <code>#trainings #coaching #orange</code>
+                        </div>
+                    </br>
+                        <div class="example">
+                            <p>Rejestrowanie <strong>przygotowania do szkolenia</strong>, np:</p>
+                            <code>#trainings #preparation #nokia</code>
+                            
+                        </div>
+                    </br>
+                        <div class="example">
+                            <p>Rejestrowanie <strong>wewnętrznego czasu</strong>:</p>
+                            <code>#internal #brown-bag</code>
+                            <code>#internal #recruitment</code>
+                            <code>#internal #lean-coffee</code>
+                            <code>#internal #self-development #conference</code>
+                            <code>#internal #JUnitParams</code>
+                            <code>#internal #standup</code>
+                        </div>
+                    </br>
+                        <div class="example">
+                            <p>Rejestrowanie <strong>chorób i urlopów:</strong></p>
+                            <code>#sick</code>
+                            <code>#vacation</code>
+                            
+                        </div>
+                    </br>
+                        <div>
+                            <p>Zasady dla nowych tagów są następujące:</p>
+                            <ul>
+                                    
+                            <li>słowa oddzielamy minusami, a nie CamelCase</li>
+                            <li>projekty dla jednego klienta prefiksujemy nazwą klienta</li>
+                        </ul>
+                        <p>Rejestrujemy urlopy i choroby, niezależnie od rodzaju umowy.</p>
+                        <p>Efekt oczekiwany jest taki, że na koniec miesiąca każdy ma zarejestrowane tyle 
+                            samo godzin (w zależności od liczby dni pracujących w miesiącu), z dokładnością do 
+                            ew. nadgodzin i prac weekendowych.</p>
                         </div>
                     </div>
                 </div>
