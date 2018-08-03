@@ -5,11 +5,11 @@ node_js:
 - 9.4.0
 githubToken:
   matrix:
-    secure: Ev7fqPUVY7z56mjl18mtom2cTEU0R8gq6sIOM6x+/DChiR6srD2jdDkJ+8R317wLcnyqlJjIgSQWXwJcr8rAkaCgrd9PnAR3YWPkC9YdFhCNsfabZq/yLiZ44ay+/LXrJ/MzZi1C/J8Zlp0cbv+td0hFO9hVsMxAcarrlEPWAWI=
+    secure: D1qx07Ly3HJ243cenr8Sa1W0878+Re56dX/bUysh99e+esImgiwCE+FPeqq6HNWozcYrYLY19mtW5jnnZBdhlDhWCbgoeHV/udRd8kSc1s3wxBk76CSGu0nfW0KxMtOJV2I1gV4o2eb6kKYFLLYZMqsj1dfZZBd7dzmjNiFSxMg=
 deploy:
   provider: pages
   skip-cleanup: true
-  github-token: $GITHUB_TOKEN
+  github-token: "$GITHUB_TOKEN"
   keep-history: true
   on:
     branch: master
