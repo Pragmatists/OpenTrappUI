@@ -56,8 +56,10 @@ describe("WorklogExpressionDirective", function () {
     it("completes suggestion", function () {
         projectsReturnedByHttpAre(['trainings', 'training']);
         userTypes("#trainings #train")
+
         scope.selectSuggestion("training");
-        expect(scope.workLogExpression).toEqual("#trainings #training");
+
+        expect(scope.workLogExpression).toEqual("#trainings #training ");
     });
 
     it("does not suggest any project if # is not present", function () {
