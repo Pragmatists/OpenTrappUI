@@ -38,11 +38,12 @@ angular
                     }
                     var currentExpression = angular.element(inputElement).val();
                     var tag = currentlyEditedTagIn(currentExpression.substring(0, $scope.getCursorPosition()));
-                    var replacementRegexp = new RegExp(tag.symbol + tag.value + '\\s*');
                     var completion = tag.symbol + suggestion + ' ';
-                    var match = replacementRegexp.exec(currentExpression);
-                    $scope.workLogExpression = currentExpression.replace(replacementRegexp, completion);
-                    effectOfLastCompletion = new EffectOfCompletion(match.index + completion.length);
+                    var tagPostion = $scope.getCursorPosition() - tag.value.length - 1;
+                    var afterTag = currentExpression.substring($scope.getCursorPosition(), currentExpression.length);
+                    var beforeTag = currentExpression.substring(0, tagPostion);
+                    $scope.workLogExpression = beforeTag + completion + afterTag;
+                    effectOfLastCompletion = new EffectOfCompletion(tagPostion + completion.length);
                 };
 
                 $scope.getCursorPosition = function () {
