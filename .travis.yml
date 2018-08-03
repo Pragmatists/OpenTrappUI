@@ -3,14 +3,11 @@ node_js:
 - 6.2.0
 - 8.11.3
 - 9.4.0
-env:
-  global:
-    GITHUB_TOKEN=${GITHUB_TOKEN}
-    secure: ZxhZmlk8tTXD9O6NphUTiqwUyoNby1sh+JFkiJFiBx9JYrCnhsBhAb9+olh+b9+E9cRw7e/ZISnPR8IumHR97fg93hzS7/UMB/q1BoyzlVtiRzO246Df+LX1pl73VXrp/LfoZiKsZV811Vw8qXb3SXrlOhq8QE3aY+j11B+nAnM=
+
 deploy:
   provider: pages
   skip-cleanup: true
-  github-token: GITHUB_TOKEN
+  github-token: $GITHUB_TOKEN
   keep-history: true
   on:
     branch: master
