@@ -36,7 +36,7 @@ angular
                         return sprintf("<b>%s</b>", name);
                     }).join(",");
                     var message = sprintf(
-                        '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s at <b>%s</b>.',
+                        '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s on <b>%s</b>.',
                         data.workload,
                         projectNames,
                         data.day

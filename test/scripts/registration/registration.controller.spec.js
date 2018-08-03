@@ -98,7 +98,7 @@ describe('Registration Controller should', function () {
 
         expect(controller.alerts).toContain({
             type: 'success',
-            message: '<b>Hurray!</b> You  have successfully logged <b>1d 2h 5m</b> on <b>ProjectManhattan</b> at <b>' + currentDateString + '</b>.'
+            message: '<b>Hurray!</b> You  have successfully logged <b>1d 2h 5m</b> on <b>ProjectManhattan</b> on <b>' + currentDateString + '</b>.'
         });
     });
 
@@ -113,7 +113,7 @@ describe('Registration Controller should', function () {
 
         expect(controller.alerts).toContain({
             type: 'success',
-            message: '<b>Hurray!</b> You  have successfully logged <b>1d 2h 5m</b> on <b>ProjectManhattan</b>,<b>Apollo</b> at <b>' + currentDateString + '</b>.'
+            message: '<b>Hurray!</b> You  have successfully logged <b>1d 2h 5m</b> on <b>ProjectManhattan</b>,<b>Apollo</b> on <b>' + currentDateString + '</b>.'
         });
     });
 
@@ -128,7 +128,7 @@ describe('Registration Controller should', function () {
 
         expect(controller.alerts).toContain({
             type: 'success',
-            message: '<b>Hurray!</b> You  have successfully logged <b>2h</b> on <b>ProjectManhattan</b> at <b>2014/01/03</b>.'
+            message: '<b>Hurray!</b> You  have successfully logged <b>2h</b> on <b>ProjectManhattan</b> on <b>2014/01/03</b>.'
         });
     });
 
