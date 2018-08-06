@@ -46,4 +46,8 @@ Run unit tests in 'continuous run' mode with 'autoWatch': `grunt karma:dev`
 
 Re-generate worklog entry parser: `grunt exec:generate_parser`
 
-Publish on Github on PROD: `grunt gh-pages:prod`
+### Deploment
+
+Deployment is triggered automatically by Travis after each commit to branch master 
+
+Publish manually on Github on PROD: `grunt gh-pages:prod`
