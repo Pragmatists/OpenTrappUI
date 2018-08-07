@@ -85,10 +85,12 @@ angular
 
         function nextMonth() {
             $scope.selectedMonth = $scope.selectedMonth.next();
+            worklog.setMonth($scope.selectedMonth.name);
         }
 
         function previousMonth() {
             $scope.selectedMonth = $scope.selectedMonth.prev();
+            worklog.setMonth($scope.selectedMonth.name);
         }
 
     });

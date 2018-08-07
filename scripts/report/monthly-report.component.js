@@ -35,11 +35,15 @@
             return self.forCurrentEmployee;
         }
 
+        function month() {
+            return self.displayMonth ? self.displayMonth : worklog.month
+        }
+
         function fetchDays() {
-            if (currentMonth && currentMonth === self.displayMonth) {
+            if (currentMonth && currentMonth === month()) {
                 return;
             } else {
-                currentMonth = self.displayMonth;
+                currentMonth = month();
             }
             $http.get('http://localhost:8080/endpoints/v1/calendar/' + currentMonth)
                 .then(function (response) {
@@ -72,7 +76,7 @@
             self.report.roundToHours();
         }
 
-        self.$onChanges = function(changesObj) {
+        self.$onChanges = function (changesObj) {
             recreateReport();
         };
 
