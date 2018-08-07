@@ -9,7 +9,7 @@ angular
                 // FIXME: create placeholder and write tests
 
                 if (!$cookies.get('apiServerUrl')) {
-                    $cookies.put('apiServerUrl', "open-trapp.herokuapp.com");
+                    $cookies.put('apiServerUrl', "https://open-trapp.herokuapp.com");
                 }
                 config.url = config.url.replace('localhost:8080', $cookies.get('apiServerUrl'));
 

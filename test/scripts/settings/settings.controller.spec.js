@@ -25,7 +25,7 @@ describe("Settings", function () {
 
         var settings = newSettingsController();
 
-        expect(settings.apiServerUrl).toEqual('http://open-trapp.herokuapp.com');
+        expect(settings.apiServerUrl).toEqual('https://open-trapp.herokuapp.com');
     });
 
     it('stores serverUrl to cookies on save', function () {
