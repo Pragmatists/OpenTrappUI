@@ -11,7 +11,7 @@ angular
                 if (!$cookies.get('apiServerUrl')) {
                     $cookies.put('apiServerUrl', "https://open-trapp.herokuapp.com");
                 }
-                config.url = config.url.replace('localhost:8080', $cookies.get('apiServerUrl'));
+                config.url = config.url.replace('http://localhost:8080', $cookies.get('apiServerUrl'));
 
                 return config;
             },
