@@ -17,7 +17,6 @@ angular
         $scope.$watch('workLogExpression', update);
 
         $timeout(function () {
-            console.log(worklog)
             worklog.setMonth(currentMonth.name, function () {
                 var employee = currentEmployee.username();
                 worklog.enableEmployee(employee);
