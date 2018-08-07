@@ -12,7 +12,7 @@ angular
             init();
 
             function init() {
-                self.apiServerUrl = 'http://open-trapp.herokuapp.com';
+                self.apiServerUrl = 'https://open-trapp.herokuapp.com';
                 var savedApiServerUrl = $cookies.get('apiServerUrl');
                 if (savedApiServerUrl) {
                     self.apiServerUrl = savedApiServerUrl;
