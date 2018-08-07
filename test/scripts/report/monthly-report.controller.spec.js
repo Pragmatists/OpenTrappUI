@@ -12,7 +12,7 @@ describe('MonthlyReportController', function () {
     }));
 
     beforeEach(function () {
-        worklogUpdated = function () {};
+        worklogUpdated = function () { };
         worklog = {
             month: '2014/01',
             projects: {},
@@ -26,23 +26,23 @@ describe('MonthlyReportController', function () {
     });
 
     it('fetches days in given month', function () {
-
         // given:
         $httpBackend
-            .whenGET('http://localhost:8080/endpoints/v1/calendar/' + worklog.month)
+            .whenGET('http://localhost:8080/endpoints/v1/calendar/' + '2018/07')
             .respond(200, {
-                days: [{id: '2014/01/01', holiday: false}, {id: '2014/01/02', holiday: true}]
+                days: [{ id: '2018/07/01', holiday: false }, { id: '2018/07/02', holiday: true }]
             });
 
         // when:
-        var controller = newMonthlyReportController();
+        var controller = newMonthlyReportController({displayMonth:'2018/07'});
+
         $httpBackend.flush();
 
         // then:
         expect(controller.days)
             .toEqual([
-                {id: '2014/01/01', number: "01", name: "Wed", holiday: false},
-                {id: '2014/01/02', number: "02", name: "Thu", holiday: true}
+                { id: '2018/07/01', number: "01", name: "Sun", holiday: false },
+                { id: '2018/07/02', number: "02", name: "Mon", holiday: true }
             ]);
 
     });
@@ -74,16 +74,16 @@ describe('MonthlyReportController', function () {
         ];
 
         // when:
-        var controller = newMonthlyReportController();
+        var controller = newMonthlyReportController({});
 
         // then:
         expect(controller.report.employees())
             .toEqual({
-                "bart.simpson": {"2014/01/01": "3.5", "2014/01/02": "3", "total": "6.5"},
-                "homer.simpson": {"2014/01/02": "4.33", "total": "4.33"}
+                "bart.simpson": { "2014/01/01": "3.5", "2014/01/02": "3", "total": "6.5" },
+                "homer.simpson": { "2014/01/02": "4.33", "total": "4.33" }
             });
         expect(controller.report.total())
-            .toEqual({"2014/01/01": "3.5", "2014/01/02": "7.33", "total": "10.83"});
+            .toEqual({ "2014/01/01": "3.5", "2014/01/02": "7.33", "total": "10.83" });
     });
 
     it("calculates total when workloads are non-positive", function () {
@@ -103,11 +103,11 @@ describe('MonthlyReportController', function () {
         ];
 
         // when:
-        var controller = newMonthlyReportController();
+        var controller = newMonthlyReportController({});
 
         // then:
         expect(controller.report.total())
-            .toEqual({"2014/01/02": "2.5", "total": "2.5"});
+            .toEqual({ "2014/01/02": "2.5", "total": "2.5" });
     });
 
     it("rounds to hours only once", function () {
@@ -120,19 +120,19 @@ describe('MonthlyReportController', function () {
         ];
 
         // when:
-        var controller = newMonthlyReportController();
+        var controller = newMonthlyReportController({});
         controller.report.employees();
 
         // then:
         expect(controller.report.employees()).toEqual({
-            "bart.simpson": {"2014/01/01": "1", "total": "1"}
+            "bart.simpson": { "2014/01/01": "1", "total": "1" }
         });
     });
 
     it("recreates report on worklog update", function () {
         // given
         worklog.entries = [];
-        var controller = newMonthlyReportController();
+        var controller = newMonthlyReportController({});
 
         // when:
         worklog.entries = [
@@ -146,15 +146,19 @@ describe('MonthlyReportController', function () {
 
         // then:
         expect(controller.report.employees()).toEqual({
-            "bart.simpson": {"2014/01/01": "1", "total": "1"}
+            "bart.simpson": { "2014/01/01": "1", "total": "1" }
         });
     });
 
-    function newMonthlyReportController() {
-        return $componentController('otMonthlyReport', {
-            $scope: $rootScope.$new(),
-            worklog: worklog
-        });
+    function newMonthlyReportController(bindings) {
+        return $componentController(
+            'otMonthlyReport',
+            {
+                $scope: $rootScope.$new(),
+                worklog: worklog
+            },
+            bindings
+        );
     }
 
 
