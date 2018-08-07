@@ -7,7 +7,8 @@
             controller: MonthlyReportController,
             controllerAs: 'viewModel',
             bindings: {
-                'forCurrentEmployee': '<'
+                'forCurrentEmployee': '<',
+                'displayMonth': '<'
             }
         });
 
@@ -35,12 +36,12 @@
         }
 
         function fetchDays() {
-            if (currentMonth && currentMonth.valueOf() === worklog.month.valueOf()) {
+            if (currentMonth && currentMonth === self.displayMonth) {
                 return;
             } else {
-                currentMonth = worklog.month;
+                currentMonth = self.displayMonth;
             }
-            $http.get('http://localhost:8080/endpoints/v1/calendar/' + worklog.month)
+            $http.get('http://localhost:8080/endpoints/v1/calendar/' + currentMonth)
                 .then(function (response) {
                     var data = response.data;
                     self.days = _(data.days).map(function (d) {
@@ -70,6 +71,10 @@
                 });
             self.report.roundToHours();
         }
+
+        self.$onChanges = function(changesObj) {
+            recreateReport();
+        };
 
     }
 

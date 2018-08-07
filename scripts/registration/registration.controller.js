@@ -6,8 +6,10 @@ angular
         self.alerts = [];
         self.clearAlerts = clearAlerts;
         self.logWork = logWork;
+        self.previousMonth = previousMonth;
+        self.nextMonth = nextMonth;
         self.status = '';
-
+        $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
 
         clearExpression();
@@ -79,6 +81,14 @@ angular
 
         function clearExpression() {
             $scope.workLogExpression = '';
+        }
+
+        function nextMonth() {
+            $scope.selectedMonth = $scope.selectedMonth.next();
+        }
+
+        function previousMonth() {
+            $scope.selectedMonth = $scope.selectedMonth.prev();
         }
 
     });
