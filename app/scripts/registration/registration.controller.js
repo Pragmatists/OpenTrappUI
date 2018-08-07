@@ -17,6 +17,7 @@ angular
         $scope.$watch('workLogExpression', update);
 
         $timeout(function () {
+            console.log(worklog)
             worklog.setMonth(currentMonth.name, function () {
                 var employee = currentEmployee.username();
                 worklog.enableEmployee(employee);
@@ -85,10 +86,12 @@ angular
 
         function nextMonth() {
             $scope.selectedMonth = $scope.selectedMonth.next();
+            worklog.setMonth($scope.selectedMonth.name);
         }
 
         function previousMonth() {
             $scope.selectedMonth = $scope.selectedMonth.prev();
+            worklog.setMonth($scope.selectedMonth.name);
         }
 
     });

@@ -47,6 +47,28 @@ describe('MonthlyReportController', function () {
 
     });
 
+    it('fetches days in worklog month when no month provided', function () {
+        // given:
+        $httpBackend
+            .whenGET('http://localhost:8080/endpoints/v1/calendar/' + '2014/01')
+            .respond(200, {
+                days: [{ id: '2014/01/01', holiday: false }, { id: '2014/01/02', holiday: true }]
+            });
+
+        // when:
+        var controller = newMonthlyReportController({});
+
+        $httpBackend.flush();
+
+        // then:
+        expect(controller.days)
+            .toEqual([
+                { id: '2014/01/01', number: "01", name: "Wed", holiday: false },
+                { id: '2014/01/02', number: "02", name: "Thu", holiday: true }
+            ]);
+
+    });
+
     it("calculates every day totals for every employee", function () {
 
         // given:

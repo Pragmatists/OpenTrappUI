@@ -58,6 +58,21 @@ server.get('/endpoints/v1/calendar/' + moment().format('YYYY') + '/' + moment().
     })
 });
 
+server.get('/endpoints/v1/calendar/' + moment().add(1,'month').format('YYYY') + '/' + moment().add(1,'month').format('MM') + '/work-log/entries', function (req, res) {
+    res.jsonp({
+        items: [
+            {
+                link: "/endpoints/v1/work-log/entries/1",
+                id: "1",
+                workload: "1d",
+                employee: "john.doe",
+                day: moment().add(1,'month').format('YYYY') + "/" + moment().add(1,'month').format('MM') + "/" + moment().add(1,'month').format('DD'),
+                projectNames: ["vacation"]
+            }
+        ]
+    })
+});
+
 server.get('/endpoints/v1/projects', function (req, res) {
     res.jsonp(["OpenTrapp","Other","brown-bag","coaching","coding-dojo","conference","vacation","internal"])
 });
