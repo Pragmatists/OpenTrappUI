@@ -85,12 +85,20 @@ angular
 
         function nextMonth() {
             $scope.selectedMonth = $scope.selectedMonth.next();
-            worklog.setMonth($scope.selectedMonth.name);
+            worklog.setMonth($scope.selectedMonth.name, function () {
+                var employee = currentEmployee.username();
+                worklog.enableEmployee(employee);
+                worklog.enableEmployeeProjects(employee);
+            });
         }
 
         function previousMonth() {
             $scope.selectedMonth = $scope.selectedMonth.prev();
-            worklog.setMonth($scope.selectedMonth.name);
+            worklog.setMonth($scope.selectedMonth.name, function () {
+                var employee = currentEmployee.username();
+                worklog.enableEmployee(employee);
+                worklog.enableEmployeeProjects(employee);
+            });
         }
 
     });
