@@ -73,7 +73,6 @@
         }
 
         self.$onChanges = function(changesObj) {
-            console.log(changesObj.displayMonth)
             recreateReport();
         };
 
