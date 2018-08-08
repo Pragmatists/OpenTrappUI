@@ -20,10 +20,7 @@ angular
                 }
                 var useLastExpression = $cookies.get('useLastExpression');
                 if (useLastExpression) {
-                    if(useLastExpression === "true")
-                        self.useLastExpression = true;
-                    else
-                        self.useLastExpression = false;
+                    self.useLastExpression = useLastExpression;
                 }
             }
 
