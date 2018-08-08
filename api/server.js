@@ -68,6 +68,14 @@ server.get('/endpoints/v1/calendar/' + moment().add(1,'month').format('YYYY') + 
                 employee: "john.doe",
                 day: moment().add(1,'month').format('YYYY') + "/" + moment().add(1,'month').format('MM') + "/" + moment().add(1,'month').format('DD'),
                 projectNames: ["vacation"]
+            },
+            {
+                link: "/endpoints/v1/work-log/entries/1",
+                id: "1",
+                workload: "1d",
+                employee: "bart.simpson",
+                day: moment().add(1,'month').format('YYYY') + "/" + moment().add(1,'month').format('MM') + "/" + moment().add(1,'month').add(4,'days').format('DD'),
+                projectNames: ["vacation"]
             }
         ]
     })

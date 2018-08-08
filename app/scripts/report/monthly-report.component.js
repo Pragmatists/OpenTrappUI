@@ -56,7 +56,8 @@
                             id: d.id,
                             number: m.format('DD'),
                             name: m.format('ddd'),
-                            holiday: d.holiday
+                            holiday: d.holiday,
+                            ifPastMonth: m.startOf('month') < moment().startOf('month')
                         }
                     }).value();
                 });

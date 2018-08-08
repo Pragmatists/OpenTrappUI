@@ -285,8 +285,12 @@ li.h12 {
 }
 
 .calendar td.weekend, .calendar th.weekend {
-    abackground-color: #ddd !important;
+    background-color: #ddd !important;
     background-color: #f0f0f0 !important;
+}
+
+.calendar td.indicate {
+    background-color: #c94c4c34 !important;
 }
 
 .calendar td {
