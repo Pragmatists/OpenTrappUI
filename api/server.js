@@ -89,8 +89,6 @@ server.post('/endpoints/v1/employee/john.doe/work-log/entries', function (req, r
     res.jsonp()
 });
 
-
-
 server.get('/endpoints/v1/calendar/' + moment().format('YYYY') + '/' + moment().format('MM'), function (req, res) {
     month = {
         "id": ""+moment().format('YYYY')+"/"+moment().format('MM'),
