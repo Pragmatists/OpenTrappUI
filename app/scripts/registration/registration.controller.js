@@ -1,6 +1,6 @@
 angular
     .module('openTrapp.registration')
-    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout) {
+    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies) {
         var self = this;
 
         self.alerts = [];
@@ -22,6 +22,8 @@ angular
                 worklog.enableEmployee(employee);
                 worklog.enableEmployeeProjects(employee);
             });
+            if(angular.isDefined($cookies.get('lastExpression')))
+                $scope.workLogExpression = $cookies.get('lastExpression');
         }, 500);
 
         function logWork() {
@@ -32,6 +34,7 @@ angular
             $http
                 .post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)
                 .then(function () {
+                    $cookies.put('lastExpression', expression());
                     clearExpression();
                     update();
                     var projectNames = _(data.projectNames).map(function (name) {
