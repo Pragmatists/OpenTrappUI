@@ -7,7 +7,8 @@ angular
             self.cancel = init;
             self.save = save;
             self.apiServerUrl = undefined;
-        self.alerts = [];
+            self.useLastExpression = undefined;
+            self.alerts = [];
 
             init();
 
@@ -17,10 +18,19 @@ angular
                 if (savedApiServerUrl) {
                     self.apiServerUrl = savedApiServerUrl;
                 }
+                var useLastExpression = $cookies.get('useLastExpression');
+                if (useLastExpression) {
+                    if(useLastExpression === "true")
+                        self.useLastExpression = true;
+                    else
+                        self.useLastExpression = false;
+                }
             }
 
             function save() {
                 $cookies.put('apiServerUrl', self.apiServerUrl);
+                $cookies.put('useLastExpression', self.useLastExpression);
+
                 self.alerts = [{
                     message: 'Settings have been saved!',
                     type: 'success'

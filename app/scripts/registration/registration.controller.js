@@ -22,7 +22,7 @@ angular
                 worklog.enableEmployee(employee);
                 worklog.enableEmployeeProjects(employee);
             });
-            if(angular.isDefined($cookies.get('lastExpression')))
+            if(angular.isDefined($cookies.get('lastExpression')) && $cookies.get('useLastExpression') === 'true')
                 $scope.workLogExpression = $cookies.get('lastExpression');
         }, 500);
 
@@ -35,6 +35,7 @@ angular
                 .post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)
                 .then(function () {
                     $cookies.put('lastExpression', expression());
+                    
                     clearExpression();
                     update();
                     var projectNames = _(data.projectNames).map(function (name) {
