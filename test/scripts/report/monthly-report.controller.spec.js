@@ -41,8 +41,8 @@ describe('MonthlyReportController', function () {
         // then:
         expect(controller.days)
             .toEqual([
-                { id: '2018/07/01', number: "01", name: "Sun", holiday: false },
-                { id: '2018/07/02', number: "02", name: "Mon", holiday: true }
+                { id: '2018/07/01', number: "01", name: "Sun", holiday: false, ifPastMonth: true},
+                { id: '2018/07/02', number: "02", name: "Mon", holiday: true, ifPastMonth: true}
             ]);
 
     });
@@ -63,8 +63,8 @@ describe('MonthlyReportController', function () {
         // then:
         expect(controller.days)
             .toEqual([
-                { id: '2014/01/01', number: "01", name: "Wed", holiday: false },
-                { id: '2014/01/02', number: "02", name: "Thu", holiday: true }
+                { id: '2014/01/01', number: "01", name: "Wed", holiday: false, ifPastMonth: true },
+                { id: '2014/01/02', number: "02", name: "Thu", holiday: true, ifPastMonth: true }
             ]);
 
     });
