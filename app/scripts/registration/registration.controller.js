@@ -1,6 +1,6 @@
 angular
     .module('openTrapp.registration')
-    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout) {
+    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies) {
         var self = this;
 
         self.alerts = [];
@@ -8,9 +8,12 @@ angular
         self.logWork = logWork;
         self.previousMonth = previousMonth;
         self.nextMonth = nextMonth;
+        self.addLog = addLog;
+        self.setLog = setLog;
         self.status = '';
         $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
+        $scope.definedLogs = [];
 
         clearExpression();
 
@@ -22,6 +25,10 @@ angular
                 worklog.enableEmployee(employee);
                 worklog.enableEmployeeProjects(employee);
             });
+
+            if(angular.isDefined($cookies.get('definedLogs')))
+                $scope.definedLogs = angular.fromJson($cookies.get('definedLogs')).logs;
+
         }, 500);
 
         function logWork() {
@@ -99,6 +106,18 @@ angular
                 worklog.enableEmployee(employee);
                 worklog.enableEmployeeProjects(employee);
             });
+        }
+
+        function addLog() {
+            if(self.status === 'success' && expression() !== '') {
+                $scope.definedLogs.push(expression());
+                $scope.definedLogs = _.uniq($scope.definedLogs);
+                $cookies.put('definedLogs', angular.toJson({'logs':$scope.definedLogs}));
+            }
+        }
+
+        function setLog(log) {
+            $scope.workLogExpression = log;
         }
 
     });

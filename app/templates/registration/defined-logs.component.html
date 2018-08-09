@@ -1,2 +1,5 @@
-dfasdfasdf
-<input class="form-control input-lg worklog-expression-input"/>
+<div class="row">
+    <span ng-repeat="log in viewModel.definedLogs">
+        <button style="margin-right: 16px; margin-top: 16px" class="btn btn-default" ng-click="viewModel.setLog(log)">{{log}}</button>
+    </span>
+</div>
