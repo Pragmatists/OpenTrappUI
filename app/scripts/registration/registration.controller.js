@@ -18,6 +18,7 @@ angular
         clearExpression();
 
         $scope.$watch('workLogExpression', update);
+        $scope.$watch('definedLogs', addLog());
 
         $timeout(function () {
             worklog.setMonth(currentMonth.name, function () {
@@ -119,5 +120,7 @@ angular
         function setLog(log) {
             $scope.workLogExpression = log;
         }
+
+        
 
     });
