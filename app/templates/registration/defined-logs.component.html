@@ -1,5 +1,5 @@
 <div class="row">
-    <span ng-repeat="log in viewModel.definedLogs">
+    <span ng-repeat="log in viewModel.definedLogs.logs">
         <button style="margin-right: 16px; margin-top: 16px" class="btn btn-default" ng-click="viewModel.setLog(log)">{{log}}  
             <span ng-click="viewModel.deleteLog($index)" class="glyphicon glyphicon-remove"></span>
         </button>

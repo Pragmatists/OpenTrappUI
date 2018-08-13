@@ -1,6 +1,6 @@
 angular
     .module('openTrapp.registration')
-    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies) {
+    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies, definedLogs) {
         var self = this;
 
         self.alerts = [];
@@ -13,12 +13,10 @@ angular
         self.status = '';
         $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
-        $scope.definedLogs = [];
 
         clearExpression();
 
         $scope.$watch('workLogExpression', update);
-        $scope.$watch('definedLogs', addLog());
 
         $timeout(function () {
             worklog.setMonth(currentMonth.name, function () {
@@ -26,11 +24,6 @@ angular
                 worklog.enableEmployee(employee);
                 worklog.enableEmployeeProjects(employee);
             });
-
-
-            if(angular.isDefined($cookies.get('definedLogs')))
-                $scope.definedLogs = angular.fromJson($cookies.get('definedLogs')).logs;
-
 
             if(angular.isDefined($cookies.get('lastExpression')) && $cookies.get('useLastExpression') === 'true')
                 $scope.workLogExpression = $cookies.get('lastExpression');
@@ -117,10 +110,8 @@ angular
         }
 
         function addLog() {
-            if(self.status === 'success' && expression() !== '') {
-                $scope.definedLogs.push(expression());
-                $scope.definedLogs = _.uniq($scope.definedLogs);
-                $cookies.put('definedLogs', angular.toJson({'logs':$scope.definedLogs}));
+            if(self.status === 'success' && expression().trim() !== '') {
+                definedLogs.addLog(expression().trim());
             }
         }
 
