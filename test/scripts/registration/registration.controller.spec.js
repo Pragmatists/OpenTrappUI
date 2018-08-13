@@ -164,6 +164,55 @@ describe('Registration Controller should', function () {
         httpBackend.verifyNoOutstandingExpectation();
     });
 
+    it('set value of worklog field when defined log is choosen', function () {
+        var controller = newRegistrationController();
+        controller.setLog('2h #ProjectManhattan @today');
+
+        expect(scope.workLogExpression).toEqual (
+            '2h #ProjectManhattan @today'
+        );
+    });
+
+    it('add log to defined logs when plus button is clicked', function () {
+        var controller = newRegistrationController();
+
+        scope.workLogExpression = '2h #ProjectManhattan @today';
+        scope.$digest();
+
+        controller.addLog();
+
+        expect(scope.definedLogs).toEqual (
+            ['2h #ProjectManhattan @today']
+        );
+    });
+
+    it('not add log to defined logs when plus button is clicked and status is "error"', function () {
+        var controller = newRegistrationController();
+
+        scope.workLogExpression = 'not valid';
+        scope.$digest();
+
+        controller.addLog();
+
+        expect(scope.definedLogs).toEqual (
+            []
+        );
+    });
+
+    it('not add log to defined logs when plus button is clicked and log is empty', function () {
+        var controller = newRegistrationController();
+
+        scope.workLogExpression = '';
+        scope.$digest();
+
+        controller.addLog();
+
+        expect(scope.definedLogs).toEqual (
+            []
+        );
+    });
+
+
     describe('status', function () {
 
         var controller;

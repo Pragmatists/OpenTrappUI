@@ -17,6 +17,9 @@
 
         this.deleteLog = deleteLog;
 
+        var cookies = {};
+        var newCookies = {};
+
         function deleteLog(i) {
             cookies = angular.fromJson($cookies.get('definedLogs'));
             cookies.logs.splice(i, 1);
