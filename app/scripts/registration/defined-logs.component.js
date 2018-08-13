@@ -11,7 +11,7 @@
             }
         });
 
-    function DefinedLogsController($cookies, definedLogs) {
+    function DefinedLogsController(definedLogs) {
         var self = this;
         this.deleteLog = deleteLog;
         

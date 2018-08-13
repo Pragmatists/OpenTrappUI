@@ -173,45 +173,6 @@ describe('Registration Controller should', function () {
         );
     });
 
-    it('add log to defined logs when plus button is clicked', function () {
-        var controller = newRegistrationController();
-
-        scope.workLogExpression = '2h #ProjectManhattan @today';
-        scope.$digest();
-
-        controller.addLog();
-
-        expect(scope.definedLogs).toEqual (
-            ['2h #ProjectManhattan @today']
-        );
-    });
-
-    it('not add log to defined logs when plus button is clicked and status is "error"', function () {
-        var controller = newRegistrationController();
-
-        scope.workLogExpression = 'not valid';
-        scope.$digest();
-
-        controller.addLog();
-
-        expect(scope.definedLogs).toEqual (
-            []
-        );
-    });
-
-    it('not add log to defined logs when plus button is clicked and log is empty', function () {
-        var controller = newRegistrationController();
-
-        scope.workLogExpression = '';
-        scope.$digest();
-
-        controller.addLog();
-
-        expect(scope.definedLogs).toEqual (
-            []
-        );
-    });
-
 
     describe('status', function () {
 
