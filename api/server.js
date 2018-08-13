@@ -85,6 +85,10 @@ server.get('/endpoints/v1/projects', function (req, res) {
     res.jsonp(["OpenTrapp","Other","brown-bag","coaching","coding-dojo","conference","vacation","internal"])
 });
 
+server.post('/endpoints/v1/employee/john.doe/work-log/entries', function (req, res) {
+    res.jsonp()
+});
+
 server.get('/endpoints/v1/calendar/' + moment().format('YYYY') + '/' + moment().format('MM'), function (req, res) {
     month = {
         "id": ""+moment().format('YYYY')+"/"+moment().format('MM'),
