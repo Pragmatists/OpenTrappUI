@@ -5,19 +5,18 @@
                 <button type="button" class="close" ng-click="registration.clearAlerts()">
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
-                <p ng-bind-html="alert.message"/>
+                <p ng-bind-html="alert.message" />
             </div>
         </div>
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <h2 class="page-header">Report your time
                     <small>using our expression language, to make it quick!</small>
-                    <button class="btn btn-lg btn-default glyphicon glyphicon-list-alt" data-toggle="modal" data-target="#modalRules"
-                                    style="height:46px; margin-left: -4px; z-index: 3; color: #2b669a; font-weight: bold;"
-                                    type="button">
-                            </button>
+                    <button class="btn btn-lg btn-default glyphicon glyphicon-list-alt" data-toggle="modal" data-target="#modalRules" style="height:46px; margin-left: -4px; z-index: 3; color: #2b669a; font-weight: bold;"
+                        type="button">
+                    </button>
                 </h2>
-                
+
             </div>
         </div>
         <div class="row">
@@ -26,26 +25,22 @@
                     <div class="form" role="form">
                         <div class="input-group has-feedback has-{{registration.status}}">
 
-                        <span class="input-group-btn">
-                            <button
-                                    class="btn btn-lg btn-primary"
-                                    style="height:46px;"
-                                    type="submit">
-                                <span class="glyphicon glyphicon-time"></span>
-                            </button>
-                        </span>
+                            <span class="input-group-btn">
+                                <button class="btn btn-lg btn-primary" style="height:46px;" type="button" ng-click="registration.addLog()">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </span>
 
                             <span class="glyphicon glyphicon-ok form-control-feedback"></span>
                             <span class="glyphicon glyphicon-ban-circle form-control-feedback"></span>
 
                             <ot-worklog-expression></ot-worklog-expression>
 
-						<span class="input-group-btn">
-								<button class="btn btn-lg btn-default" data-toggle="modal" data-target="#myModal"
-                                        style="height:46px; margin-left: -4px; z-index: 3; color: #2b669a; font-weight: bold;"
-                                        type="button">?
-								</button>
-                        </span>
+                            <span class="input-group-btn">
+                                <button class="btn btn-lg btn-default" data-toggle="modal" data-target="#myModal" style="height:46px; margin-left: -4px; z-index: 3; color: #2b669a; font-weight: bold;"
+                                    type="button">?
+                                </button>
+                            </span>
 
                         </div>
 
@@ -56,20 +51,36 @@
     </div>
 
     <div class="container" style="margin-top: 20px;">
-        
+
         <div class="row">
             <div style="color:#999;" class="col-md-10 col-md-offset-1">
                 <h3 class="page-header">{{selectedMonth.name}} month worklog</h3>
                 <div id="report">
                     <ot-monthly-report for-current-employee="true" display-month="selectedMonth.name"></ot-monthly-report>
                     <ul class="pager">
-                        <li ng-click="registration.previousMonth()" class="previous"><a>Previous</a></li>
-                        <li ng-click="registration.nextMonth()" class="next"><a>Next</a></li>
+                        <li ng-click="registration.previousMonth()" class="previous">
+                            <a>Previous</a>
+                        </li>
+                        <li ng-click="registration.nextMonth()" class="next">
+                            <a>Next</a>
+                        </li>
                     </ul>
                 </div>
             </div>
+
         </div>
+
+        <div class="container" style="margin-top: 20px;">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="row">
+                    <ot-defined-logs set-log="registration.setLog"></ot-defined-logs>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -81,40 +92,60 @@
                     <div id="examples">
                         <div class="example">
                             <code>1d #my-project</code>
-                            <p>Report <strong>8 hours</strong> to <strong>my-project</strong> for <strong>today</strong>.
+                            <p>Report
+                                <strong>8 hours</strong> to
+                                <strong>my-project</strong> for
+                                <strong>today</strong>.
                             </p>
                         </div>
                         <div class="example">
                             <code>1d #my-project @yesterday</code>
                             <code>1d #my-project @t-1</code>
-                            <p>Report <strong>8 hours</strong> to <strong>my-project</strong> for
+                            <p>Report
+                                <strong>8 hours</strong> to
+                                <strong>my-project</strong> for
                                 <strong>yesterday</strong>. </p>
                         </div>
                         <div class="example">
                             <code>1d 2h 15m #my-project</code>
-                            <p>Report <strong>10 hours and 15 minutes</strong> to <strong>my-project</strong> for
+                            <p>Report
+                                <strong>10 hours and 15 minutes</strong> to
+                                <strong>my-project</strong> for
                                 <strong>today</strong>. </p>
                         </div>
                         <div class="example">
                             <code>1d #my-project @1966/02/26</code>
-                            <p>Report <strong>8 hours</strong> to <strong>my-project</strong> on <strong>Feburary 26,
-                                1966</strong>.</p>
+                            <p>Report
+                                <strong>8 hours</strong> to
+                                <strong>my-project</strong> on
+                                <strong>Feburary 26, 1966
+                                </strong>.</p>
                         </div>
                         <div class="example">
                             <code>1d #my-project @monday</code>
                             <code>1d #my-project @last-monday</code>
-                            <p>Report <strong>8 hours </strong> to <strong>my project</strong> for <strong>last
-                                monday</strong>.</p>
+                            <p>Report
+                                <strong>8 hours </strong> to
+                                <strong>my project</strong> for
+                                <strong>last monday
+                                </strong>.</p>
                         </div>
                         <div class="example">
                             <code>1d #my-project @next-monday</code>
-                            <p>Report <strong>8 hours </strong> to <strong>my project</strong> for <strong>next
-                                monday</strong>.</p>
+                            <p>Report
+                                <strong>8 hours </strong> to
+                                <strong>my project</strong> for
+                                <strong>next monday
+                                </strong>.</p>
                         </div>
                         <div class="example">
                             <code>1d #main-project #sub-project @today</code>
-                            <p>Report <strong>8 hours </strong> to <strong>main-project</strong>, precisely <strong>sub-project</strong>
-                                for <strong>today</strong> (8 hours total, not 16).</p>
+                            <p>Report
+                                <strong>8 hours </strong> to
+                                <strong>main-project</strong>, precisely
+                                <strong>sub-project</strong>
+                                for
+                                <strong>today</strong> (8 hours total, not 16).</p>
                         </div>
                     </div>
                 </div>
@@ -134,25 +165,29 @@
                 <div class="modal-body">
                     <div id="examples">
                         <div class="example">
-                            <p>Rejestrowanie dla <strong>projektu</strong>, np.:</p>
+                            <p>Rejestrowanie dla
+                                <strong>projektu</strong>, np.:</p>
                             <code>#projects #rightmove</code>
                             <code>#projects #talkie</code>
                         </div>
-                    </br>
+                        </br>
                         <div class="example">
-                            <p>Rejestrowanie <strong>prowadzenia szkolenia</strong>, np:</p>
+                            <p>Rejestrowanie
+                                <strong>prowadzenia szkolenia</strong>, np:</p>
                             <code>#trainings #open-training</code>
                             <code>#trainings #coaching #orange</code>
                         </div>
-                    </br>
+                        </br>
                         <div class="example">
-                            <p>Rejestrowanie <strong>przygotowania do szkolenia</strong>, np:</p>
+                            <p>Rejestrowanie
+                                <strong>przygotowania do szkolenia</strong>, np:</p>
                             <code>#trainings #preparation #nokia</code>
-                            
+
                         </div>
-                    </br>
+                        </br>
                         <div class="example">
-                            <p>Rejestrowanie <strong>wewnętrznego czasu</strong>:</p>
+                            <p>Rejestrowanie
+                                <strong>wewnętrznego czasu</strong>:</p>
                             <code>#internal #brown-bag</code>
                             <code>#internal #recruitment</code>
                             <code>#internal #lean-coffee</code>
@@ -160,25 +195,28 @@
                             <code>#internal #JUnitParams</code>
                             <code>#internal #standup</code>
                         </div>
-                    </br>
+                        </br>
                         <div class="example">
-                            <p>Rejestrowanie <strong>chorób i urlopów:</strong></p>
+                            <p>Rejestrowanie
+                                <strong>chorób i urlopów:</strong>
+                            </p>
                             <code>#sick</code>
                             <code>#vacation</code>
-                            
+
                         </div>
-                    </br>
+                        </br>
                         <div>
                             <p>Zasady dla nowych tagów są następujące:</p>
                             <ul>
-                                    
-                            <li>słowa oddzielamy minusami, a nie CamelCase</li>
-                            <li>projekty dla jednego klienta prefiksujemy nazwą klienta</li>
-                        </ul>
-                        <p>Rejestrujemy urlopy i choroby, niezależnie od rodzaju umowy.</p>
-                        <p>Efekt oczekiwany jest taki, że na koniec miesiąca każdy ma zarejestrowane tyle 
-                            samo godzin (w zależności od liczby dni pracujących w miesiącu), z dokładnością do 
-                            ew. nadgodzin i prac weekendowych.</p>
+
+                                <li>słowa oddzielamy minusami, a nie CamelCase</li>
+                                <li>projekty dla jednego klienta prefiksujemy nazwą klienta</li>
+                            </ul>
+                            <p>Rejestrujemy urlopy i choroby, niezależnie od rodzaju umowy.</p>
+                            <p>Efekt oczekiwany jest taki, że na koniec miesiąca każdy ma zarejestrowane tyle samo godzin (w
+                                zależności od liczby dni pracujących w miesiącu), z dokładnością do ew. nadgodzin i prac
+                                weekendowych.
+                            </p>
                         </div>
                     </div>
                 </div>
