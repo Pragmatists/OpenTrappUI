@@ -164,6 +164,16 @@ describe('Registration Controller should', function () {
         httpBackend.verifyNoOutstandingExpectation();
     });
 
+    it('set value of worklog field when defined log is choosen', function () {
+        var controller = newRegistrationController();
+        controller.setLog('2h #ProjectManhattan @today');
+
+        expect(scope.workLogExpression).toEqual (
+            '2h #ProjectManhattan @today'
+        );
+    });
+
+
     describe('status', function () {
 
         var controller;

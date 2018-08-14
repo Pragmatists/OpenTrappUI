@@ -1,6 +1,6 @@
 angular
     .module('openTrapp.registration')
-    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies) {
+    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies, definedLogs) {
         var self = this;
 
         self.alerts = [];
@@ -8,6 +8,8 @@ angular
         self.logWork = logWork;
         self.previousMonth = previousMonth;
         self.nextMonth = nextMonth;
+        self.addLog = addLog;
+        self.setLog = setLog;
         self.status = '';
         $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
@@ -22,8 +24,10 @@ angular
                 worklog.enableEmployee(employee);
                 worklog.enableEmployeeProjects(employee);
             });
+
             if(angular.isDefined($cookies.get('lastExpression')) && $cookies.get('useLastExpression') === 'true')
                 $scope.workLogExpression = $cookies.get('lastExpression');
+
         }, 500);
 
         function logWork() {
@@ -104,5 +108,17 @@ angular
                 worklog.enableEmployeeProjects(employee);
             });
         }
+
+        function addLog() {
+            if(self.status === 'success' && expression().trim() !== '') {
+                definedLogs.addLog(expression().trim());
+            }
+        }
+
+        function setLog(log) {
+            $scope.workLogExpression = log;
+        }
+
+        
 
     });
