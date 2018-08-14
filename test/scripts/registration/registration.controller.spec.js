@@ -4,13 +4,14 @@ describe('Registration Controller should', function () {
     var $controller;
     var currentDateString = "2014/01/02";
     var employeeUsername = 'homer.simpson';
-    var scope, httpBackend, worklog, timeout;
+    var scope, httpBackend, worklog, timeout, definedLogs;
 
-    beforeEach(inject(function (_$controller_, $rootScope, $httpBackend, _currentEmployee_, _timeProvider_, $sce, _worklog_, $timeout) {
+    beforeEach(inject(function (_$controller_, $rootScope, $httpBackend, _currentEmployee_, _timeProvider_, $sce, _worklog_, $timeout, _definedLogs_) {
         $controller = _$controller_;
         scope = $rootScope.$new();
         worklog = _worklog_;
         timeout = $timeout;
+        definedLogs = _definedLogs_;
         spyOn(_timeProvider_, 'getCurrentDate').and.returnValue(new Date(currentDateString));
         spyOn(_timeProvider_, 'moment').and.returnValue(moment(currentDateString, 'YYYY-MM-DD'));
         httpBackend = $httpBackend;
@@ -19,6 +20,7 @@ describe('Registration Controller should', function () {
         spyOn($sce, 'trustAsHtml').and.callFake(function (x) {
             return x;
         });
+        spyOn(definedLogs, 'addLog');
     }));
 
     it('logs work to server and refreshes worklog', function () {
@@ -171,6 +173,39 @@ describe('Registration Controller should', function () {
         expect(scope.workLogExpression).toEqual (
             '2h #ProjectManhattan @today'
         );
+    });
+
+    it('not add log to defined logs when plus button is clicked and status is "error"', function () {
+        var controller = newRegistrationController();
+
+        scope.workLogExpression = 'not valid';
+        scope.$digest();
+
+        controller.addLog();
+
+        expect(definedLogs.addLog).not.toHaveBeenCalled ();
+    });
+
+    it('not add log to defined logs when plus button is clicked and log is empty', function () {
+        var controller = newRegistrationController();
+
+        scope.workLogExpression = '';
+        scope.$digest();
+
+        controller.addLog();
+
+        expect(definedLogs.addLog).not.toHaveBeenCalled ();
+    });
+
+    it('add log to defined logs when plus button is clicked', function () {
+        var controller = newRegistrationController();
+
+        scope.workLogExpression = '1h #projects';
+        scope.$digest();
+
+        controller.addLog();
+
+        expect(definedLogs.addLog).toHaveBeenCalledWith('1h #projects');
     });
 
 
