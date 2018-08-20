@@ -10,7 +10,7 @@ angular
         self.nextMonth = nextMonth;
         self.addLog = addLog;
         self.setLog = setLog;
-        self.extractDates = extractDates;
+        self.getDatesArray = getDatesArray;
         self.status = '';
         $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
@@ -32,30 +32,54 @@ angular
         }, 500);
 
         function logWork() {
-            var datesRangeSelector = /\@\d+\/\d+\/\d+\-\d+\/\d+\/\d+/g;
-            var datesRange = expression().match(datesRangeSelector);
-            var logToValidate = expression();
             var datesToReport = [];
+            var tags;
 
-            if (datesRange != null) {
-                logToValidate = logToValidate.replace(datesRangeSelector, "#d_a_t_e");
-                datesToReport = self.extractDates(datesRange[0]);
+            var fromDatesRangeSelector = /\@[A-Z0-9/a-z]+\-/g;
+            var toDatesRangeSelector = /\-\@[A-Z0-9/a-z]+/g;
+            var fromDate;
+            var toDate;
+            var fromDateMatch = expression().match(fromDatesRangeSelector);
+
+            if (angular.isArray(fromDateMatch))
+                fromDate = fromDateMatch[0].slice(0, -1);
+
+            var toDateMatch = expression().match(toDatesRangeSelector);
+
+            if (angular.isArray(toDateMatch))
+                toDate = toDateMatch[0].slice(1);
+
+            if (angular.isUndefined(fromDate) || angular.isUndefined(toDate)) {
+                var dateMatch = expression().match(/\@[A-Z0-9/a-z]+/g);
+                if (angular.isArray(dateMatch)) {
+                    fromDate = dateMatch[0];
+                    toDate = fromDate;
+                    tags = expression().replace(/\@[A-Z0-9/a-z]+/g, '');
+                }
+                else {
+                    tags = expression();
+                    fromDate = "";
+                    toDate = "";
+                }
             }
             else {
-                datesToReport.push(expression());
+                tags = expression().replace(/\@[A-Z0-9/a-z]+\-\@[A-Z0-9/a-z]+/g, '');
             }
 
-            if (!worklogEntryParser.isValid(logToValidate)) {
+            if (self.status !== 'success') {
                 return;
             }
 
+            datesToReport = getDatesArray(fromDate, toDate);
+
+            $cookies.put('lastExpression', expression());
+
             for (var i = 0; i < datesToReport.length; i++) {
-                var pom = logToValidate.replace("#d_a_t_e", '@' + datesToReport[i]);
-                var data = worklogEntryParser.parse(pom);
+                var logString = tags + " @" + datesToReport[i];
+                var data = worklogEntryParser.parse(logString);
                 $http
                     .post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)
                     .then(function () {
-                        $cookies.put('lastExpression', expression());
 
                         clearExpression();
                         update();
@@ -90,9 +114,44 @@ angular
                 self.status = '';
                 return;
             }
-            var datesRangeSelector = /\@\d+\/\d+\/\d+\-\d+\/\d+\/\d+/g;
-            var logToValidate = expression().replace(datesRangeSelector, "#d_a_t_e");
-            if (worklogEntryParser.isValid(logToValidate)) {
+
+            var fromDatesRangeSelector = /\@[A-Z0-9/a-z]+\-/g;
+            var toDatesRangeSelector = /\-\@[A-Z0-9/a-z]+/g;
+            var fromDate;
+            var toDate;
+            var fromDateMatch = expression().match(fromDatesRangeSelector);
+            var tags;
+
+            if (angular.isArray(fromDateMatch))
+                fromDate = fromDateMatch[0].slice(0, -1);
+
+            var toDateMatch = expression().match(toDatesRangeSelector);
+
+            if (angular.isArray(toDateMatch))
+                toDate = toDateMatch[0].slice(1);
+
+            if (angular.isUndefined(fromDate) || angular.isUndefined(toDate)) {
+                var dateMatch = expression().match(/\@[A-Z0-9/a-z]+/g);
+                if (angular.isArray(dateMatch)) {
+                    fromDate = dateMatch[0];
+                    toDate = fromDate;
+                    tags = expression().replace(/\@[A-Z0-9/a-z]+/g, '');
+                }
+                else {
+                    tags = expression();
+                    fromDate = "";
+                    toDate = "";
+                }
+            }
+            else {
+                tags = expression().replace(/\@[A-Z0-9/a-z]+\-\@[A-Z0-9/a-z]+/g, '');
+            }
+
+
+            if (
+                worklogEntryParser.isValid(tags + fromDate) &&
+                worklogEntryParser.isValid(tags + toDate)
+            ) {
                 self.status = 'success';
             } else {
                 self.status = 'error';
@@ -139,17 +198,25 @@ angular
             $scope.workLogExpression = log;
         }
 
-        function extractDates(string) {
-            string = string.substring(1);
-            var dateStrings = string.split('-');
+        function getDatesArray(from, to) {
+
+            var fromData = worklogEntryParser.parse('1h #projects ' + from);
+            var toData = worklogEntryParser.parse('1h #projects ' + to);
 
             var result = [];
 
-            var start = moment(dateStrings[0], "YYYY/MM/DD");
-            var end = moment(dateStrings[1], "YYYY/MM/DD");
+            var start = moment(fromData.day, "YYYY/MM/DD");
+            var end = moment(toData.day, "YYYY/MM/DD");
+
+            if (end.isBefore(start)) {
+                var pom = start;
+                start = end;
+                end = pom;
+            }
 
             for (var day = start; day <= end; day = day.add(1, 'd')) {
-                result.push(day.format("YYYY/MM/DD"));
+                if (day.days() > 0 && day.days() < 6)
+                    result.push(day.format("YYYY/MM/DD"));
             }
 
             return result;
