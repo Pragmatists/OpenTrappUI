@@ -1,6 +1,6 @@
 angular
     .module('openTrapp.registration')
-    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies, definedLogs) {
+    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies, definedLogs, $q) {
         var self = this;
 
         self.alerts = [];
@@ -74,39 +74,69 @@ angular
 
             $cookies.put('lastExpression', expression());
 
-            for (var i = 0; i < datesToReport.length; i++) {
-                var logString = tags + " @" + datesToReport[i];
-                var data = worklogEntryParser.parse(logString);
-                $http
-                    .post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)
-                    .then(function () {
+            // for (var i = 0; i < datesToReport.length; i++) {
+            //     var logString = tags + " @" + datesToReport[i];
+            //     var data = worklogEntryParser.parse(logString);
 
-                        clearExpression();
-                        update();
-                        var projectNames = _(data.projectNames).map(function (name) {
-                            return sprintf("<b>%s</b>", name);
-                        }).join(",");
-                        var message = sprintf(
+            var requests = $q.all(datesToReport
+                .map(function(date) {
+                    var logString = tags + " @" + date;
+                    return worklogEntryParser.parse(logString);
+                })
+                .map(function(data){ return $http.post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)}))
+
+            var logString = tags + " @" + datesToReport[0];
+            var dataFrom = worklogEntryParser.parse(logString);
+
+            logString = tags + " @" + datesToReport[datesToReport.length - 1];
+            var dataTo = worklogEntryParser.parse(logString);
+
+            requests
+                .then(function () {
+
+                    clearExpression();
+                    update();
+
+                    var projectNames = _(dataFrom.projectNames).map(function (name) {
+                        return sprintf("<b>%s</b>", name);
+                    }).join(",");
+
+                    var message;
+
+                    if (datesToReport.length === 1) {
+                        message = sprintf(
                             '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s on <b>%s</b>.',
-                            data.workload,
+                            dataFrom.workload,
                             projectNames,
-                            data.day
+                            dataFrom.day
                         );
-                        self.alerts = [{
-                            type: 'success',
-                            message: $sce.trustAsHtml(message)
-                        }];
-                        worklog.enableProjectsWithoutRefresh(data.projectNames);
-                        worklog.refresh();
-                    })
-                    .catch(function () {
-                        var message = '<b>Oops...</b> Server is not responding.';
-                        self.alerts = [{
-                            type: 'danger',
-                            message: $sce.trustAsHtml(message)
-                        }];
-                    });
-            }
+                    }
+                    else {
+                        message = sprintf(
+                            '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s from <b>%s</b> to <b>%s</b>.',
+                            dataFrom.workload,
+                            projectNames,
+                            dataFrom.day,
+                            dataTo.day
+                        );
+                    }
+
+                    self.alerts = [{
+                        type: 'success',
+                        message: $sce.trustAsHtml(message)
+                    }];
+
+                    worklog.enableProjectsWithoutRefresh(dataFrom.projectNames);
+                    worklog.refresh();
+
+                })
+                .catch(function () {
+                    var message = '<b>Oops...</b> Server is not responding.';
+                    self.alerts = [{
+                        type: 'danger',
+                        message: $sce.trustAsHtml(message)
+                    }];
+                });
         }
 
         function update() {
