@@ -21,11 +21,12 @@ describe('Registration Controller should', function () {
             return x;
         });
         spyOn(definedLogs, 'addLog');
+        
     }));
 
     it('logs work to server and refreshes worklog', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '2h #ProjectManhattan @2014/01/03';
+        userTypes('2h #ProjectManhattan @2014/01/03');
         httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
             projectNames: ['ProjectManhattan'],
             workload: '2h',
@@ -40,7 +41,7 @@ describe('Registration Controller should', function () {
 
     it('enables new projects when logging work', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '2h #ProjectManhattan #ProjectAlfa @2014/01/03';
+        userTypes('2h #ProjectManhattan #ProjectAlfa @2014/01/03');
         httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
             projectNames: ['ProjectManhattan', 'ProjectAlfa'],
             workload: '2h',
@@ -51,8 +52,8 @@ describe('Registration Controller should', function () {
         httpBackend.flush();
 
         expect(worklog.projects).toEqual({
-            ProjectManhattan : {active : true},
-            ProjectAlfa : {active : true}
+            ProjectManhattan: { active: true },
+            ProjectAlfa: { active: true }
         });
     });
 
@@ -67,7 +68,7 @@ describe('Registration Controller should', function () {
 
     it('be invalid when date is not a proper format', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = 'invalid';
+        userTypes('invalid');
 
         controller.logWork();
 
@@ -76,7 +77,7 @@ describe('Registration Controller should', function () {
 
     it('clear input after successful submit', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '2h #ProjectManhattan @2014/01/03';
+        userTypes('2h #ProjectManhattan @2014/01/03');
         httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
             projectNames: ['ProjectManhattan'],
             workload: '2h',
@@ -91,8 +92,8 @@ describe('Registration Controller should', function () {
 
     it('show successful alert with actual data', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '1d 2h 5m #ProjectManhattan';
-        controller.alert = {type: 'success', message: '1'};
+        userTypes('1d 2h 5m #ProjectManhattan');
+        controller.alert = { type: 'success', message: '1' };
         httpBackend.expectPOST().respond(200);
 
         controller.logWork();
@@ -106,8 +107,8 @@ describe('Registration Controller should', function () {
 
     it('show successful alert with multiple projets', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '1d 2h 5m #ProjectManhattan #Apollo';
-        controller.alert = {type: 'success', message: '1'};
+        userTypes('1d 2h 5m #ProjectManhattan #Apollo');
+        controller.alert = { type: 'success', message: '1' };
         httpBackend.expectPOST().respond(200);
 
         controller.logWork();
@@ -121,8 +122,8 @@ describe('Registration Controller should', function () {
 
     it('replace alert on second request', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '2h #ProjectManhattan @2014/01/03';
-        controller.alert = {type: 'success', message: '1'};
+        userTypes('2h #ProjectManhattan @2014/01/03');
+        controller.alert = { type: 'success', message: '1' };
         httpBackend.expectPOST().respond(200);
 
         controller.logWork();
@@ -136,7 +137,7 @@ describe('Registration Controller should', function () {
 
     it('display feedback to user in case of failed request', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '2h #ProjectManhattan @2014/01/03';
+        userTypes('2h #ProjectManhattan @2014/01/03');
         httpBackend.expectPOST().respond(503);
 
         controller.logWork();
@@ -150,7 +151,7 @@ describe('Registration Controller should', function () {
 
     it('does not log work to server if invalid expression', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = 'invalid';
+        userTypes('invalid');
 
         controller.logWork();
 
@@ -159,7 +160,7 @@ describe('Registration Controller should', function () {
 
     it('does not log work to server if invalid date', function () {
         var controller = newRegistrationController();
-        scope.workLogExpression = '2h #ProjectManhattan @invalid';
+        userTypes('2h #ProjectManhattan @invalid');
 
         controller.logWork();
 
@@ -170,7 +171,7 @@ describe('Registration Controller should', function () {
         var controller = newRegistrationController();
         controller.setLog('2h #ProjectManhattan @today');
 
-        expect(scope.workLogExpression).toEqual (
+        expect(scope.workLogExpression).toEqual(
             '2h #ProjectManhattan @today'
         );
     });
@@ -178,34 +179,63 @@ describe('Registration Controller should', function () {
     it('not add log to defined logs when plus button is clicked and status is "error"', function () {
         var controller = newRegistrationController();
 
-        scope.workLogExpression = 'not valid';
-        scope.$digest();
+        userTypes('not valid');
 
         controller.addLog();
 
-        expect(definedLogs.addLog).not.toHaveBeenCalled ();
+        expect(definedLogs.addLog).not.toHaveBeenCalled();
     });
 
     it('not add log to defined logs when plus button is clicked and log is empty', function () {
         var controller = newRegistrationController();
 
-        scope.workLogExpression = '';
-        scope.$digest();
+        userTypes('');
 
         controller.addLog();
 
-        expect(definedLogs.addLog).not.toHaveBeenCalled ();
+        expect(definedLogs.addLog).not.toHaveBeenCalled();
     });
 
     it('add log to defined logs when plus button is clicked', function () {
         var controller = newRegistrationController();
 
-        scope.workLogExpression = '1h #projects';
-        scope.$digest();
+        userTypes('1h #projects');
 
         controller.addLog();
 
         expect(definedLogs.addLog).toHaveBeenCalledWith('1h #projects');
+    });
+
+    it('converts range of dates description to array of dates', function () {
+        var controller = newRegistrationController();
+
+        expect(
+            controller
+            .getDatesArray('@2018/07/01', '@2018/07/05')
+        ).toEqual(['2018/07/02', '2018/07/03', '2018/07/04', '2018/07/05']);
+    });
+
+    it('make a range report when range expression is used', function() {
+        var controller = newRegistrationController();
+
+        userTypes('1d #vacations @2018/07/01-@2018/07/03');
+
+        httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
+            projectNames: ['vacations'],
+            workload: '1d',
+            day: '2018/07/02'
+        }).respond(200);
+
+        httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
+            projectNames: ['vacations'],
+            workload: '1d',
+            day: '2018/07/03'
+        }).respond(200);
+
+        controller.logWork();
+        httpBackend.flush();
+
+        expect(scope.workLogExpression).toEqual("");
     });
 
 
@@ -217,9 +247,16 @@ describe('Registration Controller should', function () {
             controller = newRegistrationController();
         });
 
-        it('shows success fedback if expression is valid', function () {
+        it('shows success feedback if expression is valid', function () {
 
             userTypes('2h #ProjectManhattan @2014/01/03');
+
+            expect(controller.status).toBe('success');
+        });
+
+        it('shows success feedback if range expression is valid', function () {
+
+            userTypes('2h #ProjectManhattan @2014/01/03-@2014/01/20');
 
             expect(controller.status).toBe('success');
         });
@@ -238,6 +275,13 @@ describe('Registration Controller should', function () {
             expect(controller.status).toBe('error');
         });
 
+        it('shows error feedback if range expression is not valid', function () {
+
+            userTypes('2h #ProjectManhattan @2014/01/03-2014/01/20');
+
+            expect(controller.status).toBe('error');
+        });
+
         it('shows no fedback if expression is empty', function () {
 
             userTypes('');
@@ -245,10 +289,7 @@ describe('Registration Controller should', function () {
             expect(controller.status).toBe('');
         });
 
-        function userTypes(input) {
-            scope.workLogExpression = input;
-            scope.$digest();
-        }
+        
 
     });
 
@@ -256,6 +297,11 @@ describe('Registration Controller should', function () {
         return $controller('RegistrationController', {
             $scope: scope
         });
+    }
+
+    function userTypes(input) {
+        scope.workLogExpression = input;
+        scope.$digest();
     }
 
 });
