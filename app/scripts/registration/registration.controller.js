@@ -74,10 +74,6 @@ angular
 
             $cookies.put('lastExpression', expression());
 
-            // for (var i = 0; i < datesToReport.length; i++) {
-            //     var logString = tags + " @" + datesToReport[i];
-            //     var data = worklogEntryParser.parse(logString);
-
             var requests = $q.all(datesToReport
                 .map(function(date) {
                     var logString = tags + " @" + date;
