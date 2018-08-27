@@ -75,11 +75,13 @@ angular
             $cookies.put('lastExpression', expression());
 
             var requests = $q.all(datesToReport
-                .map(function(date) {
+                .map(function (date) {
                     var logString = tags + " @" + date;
                     return worklogEntryParser.parse(logString);
                 })
-                .map(function(data){ return $http.post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)}))
+                .map(function (data) {
+                    return $http.post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)
+                }))
 
             var logString = tags + " @" + datesToReport[0];
             var dataFrom = worklogEntryParser.parse(logString);
@@ -175,8 +177,8 @@ angular
 
 
             if (
-                worklogEntryParser.isValid(tags + fromDate) &&
-                worklogEntryParser.isValid(tags + toDate)
+                worklogEntryParser.isValid(tags + " " + fromDate) &&
+                worklogEntryParser.isValid(tags + " " + toDate)
             ) {
                 self.status = 'success';
             } else {

@@ -249,7 +249,7 @@ describe('Registration Controller should', function () {
 
         it('shows success feedback if expression is valid', function () {
 
-            userTypes('2h #ProjectManhattan @2014/01/03');
+            userTypes('#projects #ProjectManhattan @yesterday 5h');
 
             expect(controller.status).toBe('success');
         });
@@ -282,7 +282,7 @@ describe('Registration Controller should', function () {
             expect(controller.status).toBe('error');
         });
 
-        it('shows no fedback if expression is empty', function () {
+        it('shows no feedback if expression is empty', function () {
 
             userTypes('');
 
