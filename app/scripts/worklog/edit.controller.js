@@ -45,19 +45,33 @@ angular
             return !Workload.isValid(workload);
         }
 
+        function getProjectNames() {
+            var projectsNames = (self.item.projectNames + "").split(",");
+
+            if (projectsNames.includes("")) {
+                return undefined;
+            }
+            else {
+                return projectsNames;
+            }
+        }
+
         function ok() {
+
             var data = {
                 workload: self.item.workload,
-                projectNames: (self.item.projectNames + "").split(",")
+                projectNames: getProjectNames()
             };
-            $http.post('http://localhost:8080/endpoints/v1/work-log/entries/' + self.item.id, data)
-                .then(function () {
-                    $uibModalInstance.close({
-                        type: 'success',
-                        message: 'Worklog updated'
+            if (angular.isDefined(data.projectNames)) {
+                $http.post('http://localhost:8080/endpoints/v1/work-log/entries/' + self.item.id, data)
+                    .then(function () {
+                        $uibModalInstance.close({
+                            type: 'success',
+                            message: 'Worklog updated'
+                        });
+                        worklog.refresh();
                     });
-                    worklog.refresh();
-                });
+            }
         }
 
         function cancel() {
