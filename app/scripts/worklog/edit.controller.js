@@ -45,24 +45,24 @@ angular
             return !Workload.isValid(workload);
         }
 
-        function getProjectNames() {
-            var projectsNames = (self.item.projectNames + "").split(",");
+        function includes(array, word) {
+            for(var i = 0; i < array.length; i++) {
+                if(array[i] === word) {
+                    return true;
+                }
+            }
 
-            if (projectsNames.includes("")) {
-                return undefined;
-            }
-            else {
-                return projectsNames;
-            }
+            return false;
         }
 
         function ok() {
 
             var data = {
                 workload: self.item.workload,
-                projectNames: getProjectNames()
+                projectNames: (self.item.projectNames + "").split(",")
             };
-            if (angular.isDefined(data.projectNames)) {
+
+            if (!includes(data.projectNames, "")) {
                 $http.post('http://localhost:8080/endpoints/v1/work-log/entries/' + self.item.id, data)
                     .then(function () {
                         $uibModalInstance.close({

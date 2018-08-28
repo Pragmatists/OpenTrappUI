@@ -10,8 +10,9 @@ describe('EditModalCtrl', function () {
         $controller = _$controller_;
     }));
 
+
     it("initializes", function () {
-        var item = {id: "someId"};
+        var item = { id: "someId" };
 
         var controller = $controller('EditModalCtrl', {
             $uibModalInstance: modal,
@@ -39,13 +40,13 @@ describe('EditModalCtrl', function () {
 
         var controller = $controller('EditModalCtrl', {
             $uibModalInstance: modal,
-            item: {id: "worklogId"},
+            item: { id: "worklogId" },
             worklog: worklog
         });
         controller.item.workload = "some workload";
-        controller.item.projectNames = "Project Manhattan";
+        controller.item.projectNames = "projectManhattan,tests";
         httpBackend.expectPOST("http://localhost:8080/endpoints/v1/work-log/entries/worklogId",
-            {workload: "some workload", projectNames: ["Project Manhattan"]}).respond(200);
+            { workload: "some workload", projectNames: ["projectManhattan", "tests"] }).respond(200);
 
         controller.ok();
         httpBackend.flush();

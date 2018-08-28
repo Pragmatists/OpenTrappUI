@@ -62,16 +62,16 @@ server.get('/endpoints/v1/calendar/' + moment().add(1,'month').format('YYYY') + 
     res.jsonp({
         items: [
             {
-                link: "/endpoints/v1/work-log/entries/1",
-                id: "1",
+                link: "/endpoints/v1/work-log/entries/6",
+                id: "6",
                 workload: "1d",
                 employee: "john.doe",
                 day: moment().add(1,'month').format('YYYY') + "/" + moment().add(1,'month').format('MM') + "/" + moment().add(1,'month').format('DD'),
                 projectNames: ["vacation"]
             },
             {
-                link: "/endpoints/v1/work-log/entries/1",
-                id: "1",
+                link: "/endpoints/v1/work-log/entries/7",
+                id: "7",
                 workload: "1d",
                 employee: "bart.simpson",
                 day: moment().add(1,'month').format('YYYY') + "/" + moment().add(1,'month').format('MM') + "/" + moment().add(1,'month').add(4,'days').format('DD'),
