@@ -218,7 +218,7 @@ describe('Registration Controller should', function () {
     it('make a range report when range expression is used', function() {
         var controller = newRegistrationController();
 
-        userTypes('1d #vacations @2018/07/01-@2018/07/03');
+        userTypes('1d #vacations @2018/07/01~@2018/07/03');
 
         httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
             projectNames: ['vacations'],
@@ -230,6 +230,23 @@ describe('Registration Controller should', function () {
             projectNames: ['vacations'],
             workload: '1d',
             day: '2018/07/03'
+        }).respond(200);
+
+        controller.logWork();
+        httpBackend.flush();
+
+        expect(scope.workLogExpression).toEqual("");
+    });
+
+    it('make a report on weekend', function() {
+        var controller = newRegistrationController();
+
+        userTypes('1d #vacations @2018/07/01');
+
+        httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
+            projectNames: ['vacations'],
+            workload: '1d',
+            day: '2018/07/01'
         }).respond(200);
 
         controller.logWork();
@@ -256,7 +273,7 @@ describe('Registration Controller should', function () {
 
         it('shows success feedback if range expression is valid', function () {
 
-            userTypes('2h #ProjectManhattan @2014/01/03-@2014/01/20');
+            userTypes('2h #ProjectManhattan @2014/01/03~@2014/01/20');
 
             expect(controller.status).toBe('success');
         });
