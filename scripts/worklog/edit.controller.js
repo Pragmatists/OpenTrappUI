@@ -48,7 +48,7 @@ angular
         function ok() {
             var data = {
                 workload: self.item.workload,
-                projectName: self.item.projectNames
+                projectNames: (self.item.projectNames + "").split(",")
             };
             $http.post('http://localhost:8080/endpoints/v1/work-log/entries/' + self.item.id, data)
                 .then(function () {
