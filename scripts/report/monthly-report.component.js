@@ -48,18 +48,45 @@
             $http.get('http://localhost:8080/endpoints/v1/calendar/' + currentMonth)
                 .then(function (response) {
                     var data = response.data;
-                    self.days = _(data.days).map(function (d) {
 
-                        var m = moment(d.id, 'YYYY/MM/DD');
+                    var firstDay = moment(new Date(currentMonth)).startOf('month').format("DD-MM-YYYY");
+                    var lastDay = moment(new Date(currentMonth)).endOf('month').format("DD-MM-YYYY");
 
-                        return {
-                            id: d.id,
-                            number: m.format('DD'),
-                            name: m.format('ddd'),
-                            holiday: d.holiday,
-                            ifPastMonth: m.startOf('month') < moment().startOf('month')
+                    var holidaysPromise = $http.get('http://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=' + firstDay + '&toDate=' + lastDay + '&country=pol');
+                    
+                    var holidays = [];
+
+                    holidaysPromise.then(function(result) {
+                        holidays = result.data.map(function(holiday) {
+                            var formatDate = moment(new Date(holiday.date.year + "/" + holiday.date.month + "/" + holiday.date.day)).format('YYYY/MM/DD');
+                            return formatDate;
+                        })
+
+                        var isHoliday = function(day) {
+                            for(var i = 0; i < holidays.length; i++) {
+                                if(day._i === holidays[i])
+                                    return true;
+                            }
+    
+                            return false;
                         }
-                    }).value();
+    
+                        self.days = _(data.days).map(function (d) {
+    
+                            var m = moment(d.id, 'YYYY/MM/DD');
+    
+                            return {
+                                id: d.id,
+                                number: m.format('DD'),
+                                name: m.format('ddd'),
+                                weekend: d.holiday,
+                                ifPastMonth: m.startOf('month') < moment().startOf('month'),
+                                holiday: isHoliday(m)
+                            }
+                        }).value();
+                    });
+
+                    
                 });
         }
 
