@@ -35,8 +35,8 @@ angular
             var datesToReport = [];
             var tags;
 
-            var fromDatesRangeSelector = /\@[A-Z0-9/a-z]+\-/g;
-            var toDatesRangeSelector = /\-\@[A-Z0-9/a-z]+/g;
+            var fromDatesRangeSelector = /\@[A-Z0-9/a-z-]+\~/g;
+            var toDatesRangeSelector = /\~\@[A-Z0-9/a-z-]+/g;
             var fromDate;
             var toDate;
             var fromDateMatch = expression().match(fromDatesRangeSelector);
@@ -50,11 +50,11 @@ angular
                 toDate = toDateMatch[0].slice(1);
 
             if (angular.isUndefined(fromDate) || angular.isUndefined(toDate)) {
-                var dateMatch = expression().match(/\@[A-Z0-9/a-z]+/g);
+                var dateMatch = expression().match(/\@[A-Z0-9/a-z-]+/g);
                 if (angular.isArray(dateMatch)) {
                     fromDate = dateMatch[0];
                     toDate = fromDate;
-                    tags = expression().replace(/\@[A-Z0-9/a-z]+/g, '');
+                    tags = expression().replace(/\@[A-Z0-9/a-z-]+/g, '');
                 }
                 else {
                     tags = expression();
@@ -63,7 +63,7 @@ angular
                 }
             }
             else {
-                tags = expression().replace(/\@[A-Z0-9/a-z]+\-\@[A-Z0-9/a-z]+/g, '');
+                tags = expression().replace(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g, '');
             }
 
             if (self.status !== 'success') {
@@ -111,7 +111,7 @@ angular
                     }
                     else {
                         message = sprintf(
-                            '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s from <b>%s</b> to <b>%s</b>.',
+                            '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s on working days from <b>%s</b> to <b>%s</b>.',
                             dataFrom.workload,
                             projectNames,
                             dataFrom.day,
@@ -143,8 +143,8 @@ angular
                 return;
             }
 
-            var fromDatesRangeSelector = /\@[A-Z0-9/a-z]+\-/g;
-            var toDatesRangeSelector = /\-\@[A-Z0-9/a-z]+/g;
+            var fromDatesRangeSelector = /\@[A-Z0-9/a-z-]+\~/g;
+            var toDatesRangeSelector = /\~\@[A-Z0-9/a-z-]+/g;
             var fromDate;
             var toDate;
             var fromDateMatch = expression().match(fromDatesRangeSelector);
@@ -159,11 +159,11 @@ angular
                 toDate = toDateMatch[0].slice(1);
 
             if (angular.isUndefined(fromDate) || angular.isUndefined(toDate)) {
-                var dateMatch = expression().match(/\@[A-Z0-9/a-z]+/g);
+                var dateMatch = expression().match(/\@[A-Z0-9/a-z-]+/g);
                 if (angular.isArray(dateMatch)) {
                     fromDate = dateMatch[0];
                     toDate = fromDate;
-                    tags = expression().replace(/\@[A-Z0-9/a-z]+/g, '');
+                    tags = expression().replace(/\@[A-Z0-9/a-z-]+/g, '');
                 }
                 else {
                     tags = expression();
@@ -172,7 +172,7 @@ angular
                 }
             }
             else {
-                tags = expression().replace(/\@[A-Z0-9/a-z]+\-\@[A-Z0-9/a-z]+/g, '');
+                tags = expression().replace(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g, '');
             }
 
 
