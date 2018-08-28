@@ -242,6 +242,11 @@ angular
                 end = pom;
             }
 
+            if(from === to) {
+                result.push(start.format("YYYY/MM/DD"));
+                return result;
+            }
+
             for (var day = start; day <= end; day = day.add(1, 'd')) {
                 if (day.days() > 0 && day.days() < 6)
                     result.push(day.format("YYYY/MM/DD"));
