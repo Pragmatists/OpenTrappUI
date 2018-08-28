@@ -43,7 +43,7 @@ describe('EditModalCtrl', function () {
             worklog: worklog
         });
         controller.item.workload = "some workload";
-        controller.item.projectName = "Project Manhattan";
+        controller.item.projectNames = "Project Manhattan";
         httpBackend.expectPOST("http://localhost:8080/endpoints/v1/work-log/entries/worklogId",
             {workload: "some workload", projectName: "Project Manhattan"}).respond(200);
 
