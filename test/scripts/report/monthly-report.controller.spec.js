@@ -25,54 +25,60 @@ describe('MonthlyReportController', function () {
         };
     });
 
-    // it('fetches days in given month', function () {
-    //     // given:
+    it('fetches days in given month', function () {
+        // given:
 
-    //     $httpBackend
-    //         .whenGET('http://localhost:8080/endpoints/v1/calendar/' + '2018/07')
-    //         .respond(200, {
-    //             days: [{ id: '2018/07/01', holiday: false }, { id: '2018/07/02', holiday: true }]
-    //         });
+        $httpBackend
+            .whenGET('http://localhost:8080/endpoints/v1/calendar/' + '2018/07')
+            .respond(200, {
+                days: [{ id: '2018/07/01', holiday: false }, { id: '2018/07/02', holiday: true }]
+            });
 
-    //     // when:
-    //     var controller = newMonthlyReportController({displayMonth:'2018/07'});
+        // when:
+        var controller = newMonthlyReportController({ displayMonth: '2018/07' });
 
-    //     $httpBackend.flush();
+        $httpBackend
+            .whenGET('http://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=01-07-2018&toDate=31-07-2018&country=pol')
+            .respond(200, []);
 
-    //     $httpBackend
-    //         .whenGET('http://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=01-07-2018&toDate=31-07-2018&country=pol')
-    //         .respond(200, []);
+        $httpBackend.flush();
 
-    //     // then:
-    //     expect(controller.days)
-    //         .toEqual([
-    //             { id: '2018/07/01', number: "01", name: "Sun", holiday: false, ifPastMonth: true},
-    //             { id: '2018/07/02', number: "02", name: "Mon", holiday: true, ifPastMonth: true}
-    //         ]);
 
-    // });
 
-    // it('fetches days in worklog month when no month provided', function () {
-    //     // given:
-    //     $httpBackend
-    //         .whenGET('http://localhost:8080/endpoints/v1/calendar/' + '2014/01')
-    //         .respond(200, {
-    //             days: [{ id: '2014/01/01', holiday: false }, { id: '2014/01/02', holiday: true }]
-    //         });
+        // then:
+        expect(controller.days)
+            .toEqual([
+                { id: '2018/07/01', number: "01", name: "Sun", weekend: false, ifPastMonth: true, holiday: false },
+                { id: '2018/07/02', number: "02", name: "Mon", weekend: true, ifPastMonth: true, holiday: false }
+            ]);
 
-    //     // when:
-    //     var controller = newMonthlyReportController({});
+    });
 
-    //     $httpBackend.flush();
+    it('fetches days in worklog month when no month provided', function () {
+        // given:
+        $httpBackend
+            .whenGET('http://localhost:8080/endpoints/v1/calendar/' + '2014/01')
+            .respond(200, {
+                days: [{ id: '2014/01/01', holiday: false }, { id: '2014/01/02', holiday: true }]
+            });
 
-    //     // then:
-    //     expect(controller.days)
-    //         .toEqual([
-    //             { id: '2014/01/01', number: "01", name: "Wed", holiday: false, ifPastMonth: true },
-    //             { id: '2014/01/02', number: "02", name: "Thu", holiday: true, ifPastMonth: true }
-    //         ]);
+        // when:
+        var controller = newMonthlyReportController({});
 
-    // });
+        $httpBackend
+            .whenGET('http://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=01-01-2014&toDate=31-01-2014&country=pol')
+            .respond(200, []);
+
+        $httpBackend.flush();
+
+        // then:
+        expect(controller.days)
+            .toEqual([
+                { id: '2014/01/01', number: '01', name: 'Wed', weekend: false, ifPastMonth: true, holiday: false },
+                { id: '2014/01/02', number: '02', name: 'Thu', weekend: true, ifPastMonth: true, holiday: false }
+            ]);
+
+    });
 
     it("calculates every day totals for every employee", function () {
 
