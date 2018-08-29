@@ -56,7 +56,7 @@
             <div style="color:#999;" class="col-md-10 col-md-offset-1">
                 <h3 class="page-header">{{selectedMonth.name}} month worklog</h3>
                 <div id="report">
-                    <ot-monthly-report for-current-employee="true" display-month="selectedMonth.name"></ot-monthly-report>
+                    <ot-monthly-report for-current-employee="true" display-month="selectedMonth.name", set-time="registration.setTime"></ot-monthly-report>
                     <ul class="pager">
                         <li ng-click="registration.previousMonth()" class="previous">
                             <a>Previous</a>

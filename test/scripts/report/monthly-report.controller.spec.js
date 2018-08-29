@@ -183,6 +183,46 @@ describe('MonthlyReportController', function () {
         });
     });
 
+    it("sets 'from' and 'to' dates when dates on report are selected", function () {
+
+        var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setTime: function(){}});
+
+        controller.selectDay(1, {ctrlKey: false});
+
+        expect(controller.from.isSame(moment(new Date("2018/07/01")))).toBeTruthy();
+        expect(controller.to.isSame(moment(new Date("2018/07/01")))).toBeTruthy();
+    });
+
+    it("says whether day is highlighted", function () {
+        var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setTime: function(){}});
+
+        controller.selectDay(1, {ctrlKey: false});
+
+        expect(controller.isHighlighted(1)).toBeTruthy();
+        expect(controller.isHighlighted(2)).toBeFalsy();
+    });
+
+
+    it("sets time on worklog expression when date selected", function () {
+        var setTimeMock = jasmine.createSpy('setTime');
+        var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setTime: setTimeMock});
+
+        controller.selectDay(1, {ctrlKey: false});
+        
+        expect(setTimeMock).toHaveBeenCalledWith("@2018/07/01");
+    });
+
+    it("sets time on worklog expression when date selected", function () {
+        var setTimeMock = jasmine.createSpy('setTime');
+        var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setTime: setTimeMock});
+
+        controller.selectDay(1, {ctrlKey: false});
+        controller.selectDay(15, {ctrlKey: true});
+        
+        expect(setTimeMock).toHaveBeenCalledWith("@2018/07/01~@2018/07/15");
+    });
+
+
     function newMonthlyReportController(bindings) {
         return $componentController(
             'otMonthlyReport',

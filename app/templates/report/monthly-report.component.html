@@ -5,7 +5,7 @@
             <th ng-if="!viewModel.isForOneEmployee()" class="employee">
                 Employee
             </th>
-            <th ng-repeat="day in viewModel.days" ng-class="{'weekend': day.weekend, 'holiday': day.holiday}">
+            <th ng-repeat="day in viewModel.days" ng-click="viewModel.selectDay(day.number, $event)" ng-class="{'weekend': day.weekend, 'holiday': day.holiday}">
                 <div>{{day.number}}</div>
                 {{day.name}}
             </th>
@@ -18,7 +18,7 @@
     <tbody>
         <tr ng-repeat="(employee, hours) in viewModel.report.employees()">
             <td ng-if="!viewModel.isForOneEmployee()" class="employee">{{employee}}</td>
-            <td ng-repeat="day in viewModel.days" style="position:relative;" ng-class="{'weekend': day.weekend, 'indicate': !hours[day.id] && day.ifPastMonth && !day.weekend, 'holiday': day.holiday}">
+            <td ng-repeat="day in viewModel.days" ng-click="viewModel.selectDay(day.number, $event)" style="position:relative;" ng-class="{'weekend': day.weekend, 'indicate': !hours[day.id] && day.ifPastMonth && !day.weekend, 'holiday': day.holiday, 'highlighted': viewModel.isHighlighted(day.number) && viewModel.isForOneEmployee()}">
                 <span class="glyphicon project-tag" ng-class="{{viewModel.report.tag(employee, day.id)}}"></span>
                 {{hours[day.id]}}
             </td>

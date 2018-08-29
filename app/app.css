@@ -297,6 +297,10 @@ li.h12 {
     background-color: #205bff2d !important;
 }
 
+.calendar td.highlighted, .calendar th.highlighted {
+    background-color: #ff880050 !important;
+}
+
 .calendar td {
     width: 30px;
     font-size: 11px;
