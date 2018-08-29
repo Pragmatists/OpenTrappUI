@@ -49,8 +49,8 @@
                 .then(function (response) {
                     var data = response.data;
 
-                    var firstDay = moment(new Date(currentMonth)).startOf('month').format("DD-MM-YYYY");
-                    var lastDay = moment(new Date(currentMonth)).endOf('month').format("DD-MM-YYYY");
+                    var firstDay = moment(new Date(currentMonth + '/01')).startOf('month').format("DD-MM-YYYY");
+                    var lastDay = moment(new Date(currentMonth + '/01')).endOf('month').format("DD-MM-YYYY");
 
                     var holidaysPromise = $http.get('http://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=' + firstDay + '&toDate=' + lastDay + '&country=pol');
                     
