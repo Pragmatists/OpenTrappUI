@@ -290,7 +290,7 @@ describe('MonthlyReportController', function () {
                 $scope: $rootScope.$new(),
                 worklog: worklog
             },
-            bindings
+            _.merge(bindings, {dates: {from: undefined, to: undefined}})
         );
     }
 
