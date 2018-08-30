@@ -9,8 +9,6 @@ describe('MonthlyReportController', function () {
         $rootScope = _$rootScope_;
         $componentController = _$componentController_;
         $httpBackend = _$httpBackend_;
-
-        
     }));
 
     beforeEach(function () {
@@ -25,8 +23,6 @@ describe('MonthlyReportController', function () {
                 return !!this.month;
             }
         };
-
-        
     });
 
     it('fetches days in given month', function () {
@@ -55,7 +51,6 @@ describe('MonthlyReportController', function () {
                 { id: '2018/07/01', number: "01", name: "Sun", weekend: false, ifPastMonth: true, holiday: false },
                 { id: '2018/07/02', number: "02", name: "Mon", weekend: true, ifPastMonth: true, holiday: false }
             ]);
-
     });
 
     it('fetches days in worklog month when no month provided', function () {
