@@ -55,6 +55,8 @@
         <div class="row">
             <div style="color:#999;" class="col-md-10 col-md-offset-1">
                 <h3 class="page-header">{{selectedMonth.name}} month worklog</h3>
+                <p><strong>Click</strong> on date to set it on worklog expression</p>
+                <p><strong>Shift + Click</strong> on date to set dates range on worklog expression</p>
                 <div id="report">
                     <ot-monthly-report for-current-employee="true" display-month="selectedMonth.name", set-date="registration.setDate"></ot-monthly-report>
                     <ul class="pager">
