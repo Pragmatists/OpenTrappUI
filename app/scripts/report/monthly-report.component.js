@@ -9,7 +9,7 @@
             bindings: {
                 'forCurrentEmployee': '<',
                 'displayMonth': '<',
-                setTime: '='
+                'setDate': '='
             }
         });
 
@@ -20,12 +20,46 @@
         self.selectDay = selectDay;
         self.days = [];
         self.report = {};
-        self.from;
-        self.to;
         self.isHighlighted = isHighlighted;
         self.generateTimeString = generateTimeString;
 
         var currentMonth = null;
+
+        var SelectedDays = function() {
+            var from = undefined;
+            var to = undefined;
+
+
+            return {
+                from: from,
+                to: to,
+                areSame: function() {
+                    return this.from.isSame(this.to);
+                },
+                include: function(date) {
+                    return (date.isBefore(this.to) || date.isSame(this.to)) && (date.isAfter(this.from) || date.isSame(this.from))
+                },
+                deselect: function() {
+                    this.from = undefined;
+                    this.to = undefined;
+                    return 0;
+                },
+                setOneDate: function(date) {
+                    this.from = date;
+                    this.to = date;
+                    return 0;
+                },
+                setRangeOfDates: function(secondDate) {
+                    this.from = secondDate.isBefore(this.from) ? secondDate : this.from;
+                    this.to = secondDate.isAfter(this.to) ? secondDate : this.to;
+                },
+                areDefined: function() {
+                    return this.from && this.to;
+                }
+            }
+        }
+
+        self.selectedDates = new SelectedDays();
 
         recreateReport();
         worklog.onUpdate(recreateReport);
@@ -49,15 +83,15 @@
             dayNumber = _.parseInt(dayNumber);
             var date = moment(new Date(currentMonth + '/' + dayNumber));
 
-            return (date.isBefore(self.to) || date.isSame(self.to)) && (date.isAfter(self.from) || date.isSame(self.from));
+            return self.selectedDates.include(date);
         }
 
         function generateTimeString() {
-            if (self.from && self.to && !self.from.isSame(self.to)) {
-                return '@' + self.from.format("YYYY/MM/DD") + "~" + '@' + self.to.format("YYYY/MM/DD");
+            if (self.selectedDates.areDefined() && !self.selectedDates.areSame()) {
+                return '@' + self.selectedDates.from.format("YYYY/MM/DD") + "~" + '@' + self.selectedDates.to.format("YYYY/MM/DD");
             }
-            else if (self.from && self.to) {
-                return '@' + self.from.format("YYYY/MM/DD");
+            else if (self.selectedDates.from && self.selectedDates.to) {
+                return '@' + self.selectedDates.from.format("YYYY/MM/DD");
             }
             else {
                 return '';
@@ -72,43 +106,23 @@
             dayNumber = _.parseInt(dayNumber);
             var date = moment(new Date(currentMonth + '/' + dayNumber));
 
-            if (event.ctrlKey || event.metaKey) {
-                if (self.from && self.to) {
-                    if (self.from.isSame(self.to) && !self.from.isSame(date)) {
 
-                        self.from = date.isBefore(self.from) ? date : self.from;
-                        self.to = date.isAfter(self.to) ? date : self.to;
-
-                    }
-                    else {
-                        self.from = date;
-                        self.to = date;
-                    }
+            if (self.selectedDates.areDefined()) {
+                if ((event.ctrlKey || event.metaKey) && self.selectedDates.areSame() && !self.selectedDates.from.isSame(date)) {
+                    self.selectedDates.setRangeOfDates(date);
+                }
+                else if (self.selectedDates.areSame() && self.selectedDates.from.isSame(date)) {
+                    self.selectedDates.deselect();
                 }
                 else {
-                    self.from = date;
-                    self.to = date;
+                    self.selectedDates.setOneDate(date);
                 }
             }
             else {
-                if (self.from && self.to) {
-                    if (self.from.isSame(self.to) && self.from.isSame(date)) {
-
-                        self.from = undefined;
-                        self.to = undefined;
-                    }
-                    else {
-                        self.from = date;
-                        self.to = date;
-                    }
-                }
-                else {
-                    self.from = date;
-                    self.to = date;
-                }
+                self.selectedDates.setOneDate(date);
             }
 
-            self.setTime(self.generateTimeString());
+            self.setDate(self.generateTimeString());
         }
 
         function fetchDays() {

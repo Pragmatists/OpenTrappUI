@@ -14,7 +14,7 @@ angular
         self.status = '';
         $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
-        self.setTime = setTime;
+        self.setDate = setDate;
 
         clearExpression();
 
@@ -256,7 +256,7 @@ angular
             return result;
         }
 
-        function setTime(timeString) {
+        function setDate(timeString) {
             if(expression().match(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g) != null) {
                 setLog(expression().replace(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g, timeString));
             }
