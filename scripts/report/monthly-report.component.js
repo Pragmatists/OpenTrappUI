@@ -9,7 +9,8 @@
             bindings: {
                 'forCurrentEmployee': '<',
                 'displayMonth': '<',
-                'setDate': '='
+                'setDate': '=',
+                'dates': '<'
             }
         });
 
@@ -22,6 +23,8 @@
         self.report = {};
         self.isHighlighted = isHighlighted;
         self.generateTimeString = generateTimeString;
+        self.getFrom = getFrom;
+        self.getTo = getTo;
 
         var currentMonth = null;
 
@@ -66,8 +69,12 @@
 
         function recreateReport() {
             if (worklog.hasMonthSet()) {
+                
                 fetchDays();
                 calculateDays();
+
+                self.selectedDates.from = self.getFrom();
+                self.selectedDates.to = self.getTo();
             }
         }
 
@@ -84,6 +91,14 @@
             var date = moment(new Date(currentMonth + '/' + dayNumber));
 
             return self.selectedDates.include(date);
+        }
+
+        function getFrom() {
+            return self.dates.from;
+        }
+
+        function getTo() {
+            return self.dates.to;
         }
 
         function generateTimeString() {
@@ -131,6 +146,7 @@
             } else {
                 currentMonth = month();
             }
+
             $http.get('http://localhost:8080/endpoints/v1/calendar/' + currentMonth)
                 .then(function (response) {
                     var data = response.data;

@@ -15,6 +15,10 @@ angular
         $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
         self.setDate = setDate;
+        $scope.dates = {
+            from: undefined,
+            to: undefined
+        }
 
         clearExpression();
 
@@ -141,6 +145,7 @@ angular
         function update() {
             if (expression() == '') {
                 self.status = '';
+                $scope.dates = {};
                 return;
             }
 
@@ -176,14 +181,29 @@ angular
                 tags = expression().replace(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g, '');
             }
 
+            
+
 
             if (
                 worklogEntryParser.isValid(tags + " " + fromDate) &&
                 worklogEntryParser.isValid(tags + " " + toDate)
             ) {
                 self.status = 'success';
+
+                $scope.dates.from = moment(new Date(worklogEntryParser.parse('1h #projects ' + fromDate).day));
+                $scope.dates.to = moment(new Date(worklogEntryParser.parse('1h #projects ' + toDate).day));
+
+                var before = $scope.dates.from.isBefore($scope.dates.to) ? $scope.dates.from : $scope.dates.to;
+                var after = $scope.dates.from.isAfter($scope.dates.to) ? $scope.dates.from : $scope.dates.to;
+
+                $scope.dates.from = before;
+                $scope.dates.to = after;
+                $scope.dates = {from:before, to:after};
+
             } else {
                 self.status = 'error';
+
+                $scope.dates = {};
             }
         }
 
@@ -243,7 +263,7 @@ angular
                 end = pom;
             }
 
-            if(from === to) {
+            if (from === to) {
                 result.push(start.format("YYYY/MM/DD"));
                 return result;
             }
@@ -257,13 +277,13 @@ angular
         }
 
         function setDate(timeString) {
-            if(expression().match(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g) != null) {
+            if (expression().match(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g) != null) {
                 setLog(expression().replace(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g, timeString));
             }
-            else if(expression().match(/\@[A-Z0-9/a-z-]+/g) != null) {
+            else if (expression().match(/\@[A-Z0-9/a-z-]+/g) != null) {
                 setLog(expression().replace(/\@[A-Z0-9/a-z-]+/g, timeString));
             }
-            else if(expression().length > 0 && expression()[expression().length - 1] !== ' ') {
+            else if (expression().length > 0 && expression()[expression().length - 1] !== ' ') {
                 setLog(expression() + " " + timeString);
             }
             else {
