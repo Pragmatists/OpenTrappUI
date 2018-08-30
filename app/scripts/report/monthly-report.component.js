@@ -108,7 +108,7 @@
 
 
             if (self.selectedDates.areDefined()) {
-                if ((event.ctrlKey || event.metaKey) && self.selectedDates.areSame() && !self.selectedDates.from.isSame(date)) {
+                if ((event.shiftKey) && self.selectedDates.areSame() && !self.selectedDates.from.isSame(date)) {
                     self.selectedDates.setRangeOfDates(date);
                 }
                 else if (self.selectedDates.areSame() && self.selectedDates.from.isSame(date)) {
