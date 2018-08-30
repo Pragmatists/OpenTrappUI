@@ -14,6 +14,7 @@ angular
         self.status = '';
         $scope.selectedMonth = currentMonth;
         $scope.workLogExpression = '';
+        self.setDate = setDate;
 
         clearExpression();
 
@@ -253,6 +254,21 @@ angular
             }
 
             return result;
+        }
+
+        function setDate(timeString) {
+            if(expression().match(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g) != null) {
+                setLog(expression().replace(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g, timeString));
+            }
+            else if(expression().match(/\@[A-Z0-9/a-z-]+/g) != null) {
+                setLog(expression().replace(/\@[A-Z0-9/a-z-]+/g, timeString));
+            }
+            else if(expression().length > 0 && expression()[expression().length - 1] !== ' ') {
+                setLog(expression() + " " + timeString);
+            }
+            else {
+                setLog(expression() + timeString);
+            }
         }
 
     });
