@@ -51,7 +51,6 @@ describe('MonthlyReportController', function () {
                 { id: '2018/07/01', number: "01", name: "Sun", weekend: false, ifPastMonth: true, holiday: false },
                 { id: '2018/07/02', number: "02", name: "Mon", weekend: true, ifPastMonth: true, holiday: false }
             ]);
-
     });
 
     it('fetches days in worklog month when no month provided', function () {
@@ -182,6 +181,107 @@ describe('MonthlyReportController', function () {
             "bart.simpson": { "2014/01/01": "1", "total": "1" }
         });
     });
+
+    it("sets 'from' and 'to' dates when dates on report are selected", function () {
+
+        var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: function () { } });
+
+        controller.selectDay(1, { shiftKey: false });
+
+        expect(controller.selectedDates.from.isSame(moment(new Date("2018/07/01")))).toBeTruthy();
+        expect(controller.selectedDates.to.isSame(moment(new Date("2018/07/01")))).toBeTruthy();
+    });
+
+    it("says whether day is highlighted", function () {
+        var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: function () { } });
+
+        controller.selectDay(1, { shiftKey: false });
+
+        expect(controller.isHighlighted(1)).toBeTruthy();
+        expect(controller.isHighlighted(2)).toBeFalsy();
+    });
+
+    describe("sets date on worklog expression", function () {
+        it("when nothing had been selected", function () {
+            var setDateMock = jasmine.createSpy('setDate');
+            var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: setDateMock });
+
+            controller.selectDay(1, { shiftKey: false });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01");
+        });
+
+        it("when date had been selected", function () {
+            var setDateMock = jasmine.createSpy('setDate');
+            var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: setDateMock });
+
+            controller.selectDay(2, { shiftKey: false });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/02");
+
+            controller.selectDay(1, { shiftKey: false });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01");
+        });
+
+        it("when range of dates had been selected", function () {
+            var setDateMock = jasmine.createSpy('setDate');
+            var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: setDateMock });
+
+            controller.selectDay(1, { shiftKey: false });
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01");
+            controller.selectDay(15, { shiftKey: true });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01~@2018/07/15");
+
+            controller.selectDay(1, { shiftKey: false });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01");
+        });
+    });
+
+    describe("sets range of dates on worklog expression", function () {
+        it("when nothing had been selected", function () {
+            var setDateMock = jasmine.createSpy('setDate');
+            var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: setDateMock });
+
+            controller.selectDay(1, { shiftKey: false });
+            controller.selectDay(15, { shiftKey: true });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01~@2018/07/15");
+        });
+
+        it("when date had been selected", function () {
+            var setDateMock = jasmine.createSpy('setDate');
+            var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: setDateMock });
+
+            controller.selectDay(2, { shiftKey: false });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/02");
+
+            controller.selectDay(1, { shiftKey: false });
+            controller.selectDay(15, { shiftKey: true });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01~@2018/07/15");
+        });
+
+        it("when range of dates had been selected", function () {
+            var setDateMock = jasmine.createSpy('setDate');
+            var controller = newMonthlyReportController({ displayMonth: '2018/07', forCurrentEmployee: true, setDate: setDateMock });
+
+            controller.selectDay(1, { shiftKey: false });
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01");
+            controller.selectDay(15, { shiftKey: true });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/01~@2018/07/15");
+
+            controller.selectDay(3, { shiftKey: false });
+            controller.selectDay(18, { shiftKey: true });
+
+            expect(setDateMock).toHaveBeenCalledWith("@2018/07/03~@2018/07/18");
+        });
+    });
+
 
     function newMonthlyReportController(bindings) {
         return $componentController(
