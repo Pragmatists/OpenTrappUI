@@ -255,12 +255,12 @@ describe('Registration Controller should', function () {
         expect(scope.workLogExpression).toEqual("");
     });
 
-    it('sets time when new time string is provided', function() {
+    it('set date when new date string is provided', function() {
         var controller = newRegistrationController();
 
         userTypes('1d #vacations @2018/07/01');
 
-        controller.setTime('@2017/07/02~@2018/08/24');
+        controller.setDate('@2017/07/02~@2018/08/24');
 
         expect(scope.workLogExpression).toEqual("1d #vacations @2017/07/02~@2018/08/24");
     });
