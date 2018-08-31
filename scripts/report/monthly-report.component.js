@@ -73,8 +73,11 @@
                 fetchDays();
                 calculateDays();
 
-                self.selectedDates.from = self.getFrom();
-                self.selectedDates.to = self.getTo();
+                if(self.isForOneEmployee()) {
+                    self.selectedDates.from = self.getFrom();
+                    self.selectedDates.to = self.getTo();
+                }
+
             }
         }
 
@@ -163,6 +166,31 @@
                             var formatDate = moment(new Date(holiday.date.year + "/" + holiday.date.month + "/" + holiday.date.day)).format('YYYY/MM/DD');
                             return formatDate;
                         })
+
+                        var isHoliday = function (day) {
+                            for (var i = 0; i < holidays.length; i++) {
+                                if (day._i === holidays[i])
+                                    return true;
+                            }
+
+                            return false;
+                        }
+
+                        self.days = _(data.days).map(function (d) {
+
+                            var m = moment(d.id, 'YYYY/MM/DD');
+
+                            return {
+                                id: d.id,
+                                number: m.format('DD'),
+                                name: m.format('ddd'),
+                                weekend: d.holiday,
+                                ifPastMonth: m.startOf('month') < moment().startOf('month'),
+                                holiday: isHoliday(m)
+                            }
+                        }).value();
+                    }).catch(function() {
+                        holidays = [];
 
                         var isHoliday = function (day) {
                             for (var i = 0; i < holidays.length; i++) {
