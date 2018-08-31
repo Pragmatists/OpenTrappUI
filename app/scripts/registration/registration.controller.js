@@ -203,7 +203,7 @@ angular
             } else {
                 self.status = 'error';
 
-                $scope.dates = {};
+                // $scope.dates = {};
             }
         }
 
