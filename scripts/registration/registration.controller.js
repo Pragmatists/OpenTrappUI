@@ -181,14 +181,8 @@ angular
                 tags = expression().replace(/\@[A-Z0-9/a-z-]+\~\@[A-Z0-9/a-z-]+/g, '');
             }
 
-            
-
-
-            if (
-                worklogEntryParser.isValid(tags + " " + fromDate) &&
-                worklogEntryParser.isValid(tags + " " + toDate)
-            ) {
-                self.status = 'success';
+            if (worklogEntryParser.isValid('1h #projects ' + fromDate) &&
+                worklogEntryParser.isValid('1h #projects ' + toDate)) {
 
                 $scope.dates.from = moment(new Date(worklogEntryParser.parse('1h #projects ' + fromDate).day));
                 $scope.dates.to = moment(new Date(worklogEntryParser.parse('1h #projects ' + toDate).day));
@@ -198,12 +192,19 @@ angular
 
                 $scope.dates.from = before;
                 $scope.dates.to = after;
-                $scope.dates = {from:before, to:after};
+                $scope.dates = {from: before, to: after};
+            } else {
+                $scope.dates = {};
+            }
 
+
+            if (
+                worklogEntryParser.isValid(tags + " " + fromDate) &&
+                worklogEntryParser.isValid(tags + " " + toDate)
+            ) {
+                self.status = 'success';
             } else {
                 self.status = 'error';
-
-                // $scope.dates = {};
             }
         }
 
