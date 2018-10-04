@@ -38,7 +38,7 @@ describe('MonthlyReportController', function () {
         var controller = newMonthlyReportController({ displayMonth: '2018/07' });
 
         $httpBackend
-            .whenGET('http://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=01-07-2018&toDate=31-07-2018&country=pol')
+            .whenGET('https://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=01-07-2018&toDate=31-07-2018&country=pol')
             .respond(200, []);
 
         $httpBackend.flush();
@@ -65,7 +65,7 @@ describe('MonthlyReportController', function () {
         var controller = newMonthlyReportController({});
 
         $httpBackend
-            .whenGET('http://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=01-01-2014&toDate=31-01-2014&country=pol')
+            .whenGET('https://kayaposoft.com/enrico/json/v1.0/?action=getPublicHolidaysForDateRange&fromDate=01-01-2014&toDate=31-01-2014&country=pol')
             .respond(200, []);
 
         $httpBackend.flush();
