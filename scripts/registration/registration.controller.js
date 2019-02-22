@@ -1,6 +1,6 @@
 angular
-    .module('openTrapp.registration')
-    .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies, definedLogs, $q) {
+  .module('openTrapp.registration')
+  .controller('RegistrationController', function ($scope, $http, currentEmployee, worklogEntryParser, $sce, worklog, currentMonth, $timeout, $cookies, definedLogs, $q, projectNames, $uibModal) {
         var self = this;
 
         self.alerts = [];
@@ -18,7 +18,7 @@ angular
         $scope.dates = {
             from: undefined,
             to: undefined
-        }
+        };
 
         clearExpression();
 
@@ -37,7 +37,6 @@ angular
         }, 500);
 
         function logWork() {
-            var datesToReport = [];
             var tags;
 
             var fromDatesRangeSelector = /\@[A-Z0-9/a-z-]+\~/g;
@@ -63,8 +62,8 @@ angular
                 }
                 else {
                     tags = expression();
-                    fromDate = "";
-                    toDate = "";
+                    fromDate = '';
+                    toDate = '';
                 }
             }
             else {
@@ -75,71 +74,95 @@ angular
                 return;
             }
 
-            datesToReport = getDatesArray(fromDate, toDate);
-
             $cookies.put('lastExpression', expression());
 
-            var requests = $q.all(datesToReport
-                .map(function (date) {
-                    var logString = tags + " @" + date;
-                    return worklogEntryParser.parse(logString);
-                })
-                .map(function (data) {
-                    return $http.post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data)
-                }))
+            projectNames.loadAllStartingWith('')
+              .then(function (existingProjectNames) {
+                  var newProjectNames = _.difference(worklogEntryParser.parse(tags).projectNames, existingProjectNames);
+                  if (!_.isEmpty(newProjectNames)) {
+                      var modalInstance = $uibModal.open({
+                          templateUrl: 'templates/registration/new-tags-modal.html',
+                          controller: 'NewTagsConfirmationModalCtrl',
+                          controllerAs: 'newTags',
+                          resolve: {
+                              newTagNames: function () {
+                                  return newProjectNames;
+                              }
+                          }
+                      });
 
-            var logString = tags + " @" + datesToReport[0];
-            var dataFrom = worklogEntryParser.parse(logString);
+                      modalInstance.result.then(function () {
+                          doLogWork();
+                      });
+                  } else {
+                      doLogWork();
+                  }
+              });
 
-            logString = tags + " @" + datesToReport[datesToReport.length - 1];
-            var dataTo = worklogEntryParser.parse(logString);
+            function doLogWork() {
+                var datesToReport = getDatesArray(fromDate, toDate) || [];
+                var requests = $q.all(datesToReport
+                  .map(function (date) {
+                      var logString = tags + ' @' + date;
+                      return worklogEntryParser.parse(logString);
+                  })
+                  .map(function (data) {
+                      return $http.post('http://localhost:8080/endpoints/v1/employee/' + currentEmployee.username() + '/work-log/entries', data);
+                  }));
 
-            requests
-                .then(function () {
+                var logString = tags + ' @' + datesToReport[0];
+                var dataFrom = worklogEntryParser.parse(logString);
 
-                    clearExpression();
-                    update();
+                logString = tags + ' @' + datesToReport[datesToReport.length - 1];
+                var dataTo = worklogEntryParser.parse(logString);
 
-                    var projectNames = _(dataFrom.projectNames).map(function (name) {
-                        return sprintf("<b>%s</b>", name);
-                    }).join(",");
+                requests
+                  .then(function () {
 
-                    var message;
+                      clearExpression();
+                      update();
 
-                    if (datesToReport.length === 1) {
-                        message = sprintf(
+                      var projectNames = _(dataFrom.projectNames).map(function (name) {
+                          return sprintf('<b>%s</b>', name);
+                      }).join(',');
+
+                      var message;
+
+                      if (datesToReport.length === 1) {
+                          message = sprintf(
                             '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s on <b>%s</b>.',
                             dataFrom.workload,
                             projectNames,
                             dataFrom.day
-                        );
-                    }
-                    else {
-                        message = sprintf(
+                          );
+                      }
+                      else {
+                          message = sprintf(
                             '<b>Hurray!</b> You  have successfully logged <b>%s</b> on %s on working days from <b>%s</b> to <b>%s</b>.',
                             dataFrom.workload,
                             projectNames,
                             dataFrom.day,
                             dataTo.day
-                        );
-                    }
+                          );
+                      }
 
-                    self.alerts = [{
-                        type: 'success',
-                        message: $sce.trustAsHtml(message)
-                    }];
+                      self.alerts = [{
+                          type: 'success',
+                          message: $sce.trustAsHtml(message)
+                      }];
 
-                    worklog.enableProjectsWithoutRefresh(dataFrom.projectNames);
-                    worklog.refresh();
+                      worklog.enableProjectsWithoutRefresh(dataFrom.projectNames);
+                      worklog.refresh();
 
-                })
-                .catch(function () {
-                    var message = '<b>Oops...</b> Server is not responding.';
-                    self.alerts = [{
-                        type: 'danger',
-                        message: $sce.trustAsHtml(message)
-                    }];
-                });
+                  })
+                  .catch(function () {
+                      var message = '<b>Oops...</b> Server is not responding.';
+                      self.alerts = [{
+                          type: 'danger',
+                          message: $sce.trustAsHtml(message)
+                      }];
+                  });
+            }
         }
 
         function update() {
@@ -173,8 +196,8 @@ angular
                 }
                 else {
                     tags = expression();
-                    fromDate = "";
-                    toDate = "";
+                    fromDate = '';
+                    toDate = '';
                 }
             }
             else {
@@ -182,7 +205,7 @@ angular
             }
 
             if (worklogEntryParser.isValid('1h #projects ' + fromDate) &&
-                worklogEntryParser.isValid('1h #projects ' + toDate)) {
+              worklogEntryParser.isValid('1h #projects ' + toDate)) {
 
                 $scope.dates.from = moment(new Date(worklogEntryParser.parse('1h #projects ' + fromDate).day));
                 $scope.dates.to = moment(new Date(worklogEntryParser.parse('1h #projects ' + toDate).day));
@@ -192,15 +215,15 @@ angular
 
                 $scope.dates.from = before;
                 $scope.dates.to = after;
-                $scope.dates = {from: before, to: after};
+                $scope.dates = { from: before, to: after };
             } else {
                 $scope.dates = {};
             }
 
 
             if (
-                worklogEntryParser.isValid(tags + " " + fromDate) &&
-                worklogEntryParser.isValid(tags + " " + toDate)
+              worklogEntryParser.isValid(tags + ' ' + fromDate) &&
+              worklogEntryParser.isValid(tags + ' ' + toDate)
             ) {
                 self.status = 'success';
             } else {
@@ -255,8 +278,8 @@ angular
 
             var result = [];
 
-            var start = moment(fromData.day, "YYYY/MM/DD");
-            var end = moment(toData.day, "YYYY/MM/DD");
+            var start = moment(fromData.day, 'YYYY/MM/DD');
+            var end = moment(toData.day, 'YYYY/MM/DD');
 
             if (end.isBefore(start)) {
                 var pom = start;
@@ -265,13 +288,13 @@ angular
             }
 
             if (from === to) {
-                result.push(start.format("YYYY/MM/DD"));
+                result.push(start.format('YYYY/MM/DD'));
                 return result;
             }
 
             for (var day = start; day <= end; day = day.add(1, 'd')) {
                 if (day.days() > 0 && day.days() < 6)
-                    result.push(day.format("YYYY/MM/DD"));
+                    result.push(day.format('YYYY/MM/DD'));
             }
 
             return result;
@@ -285,11 +308,27 @@ angular
                 setLog(expression().replace(/\@[A-Z0-9/a-z-]+/g, timeString));
             }
             else if (expression().length > 0 && expression()[expression().length - 1] !== ' ') {
-                setLog(expression() + " " + timeString);
+                setLog(expression() + ' ' + timeString);
             }
             else {
                 setLog(expression() + timeString);
             }
         }
 
-    });
+    }
+  )
+  .controller('NewTagsConfirmationModalCtrl', function ($uibModalInstance, newTagNames) {
+      var self = this;
+
+      self.newTagNames = newTagNames;
+      self.ok = ok;
+      self.cancel = cancel;
+
+      function ok() {
+          $uibModalInstance.close();
+      }
+
+      function cancel() {
+          $uibModalInstance.dismiss('cancel');
+      }
+  });
