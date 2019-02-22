@@ -1,17 +1,21 @@
 describe('Registration Controller should', function () {
     beforeEach(module('openTrapp.registration'));
+  beforeEach(module("karma.cached.htmls"));
 
     var $controller;
     var currentDateString = "2014/01/02";
     var employeeUsername = 'homer.simpson';
-    var scope, httpBackend, worklog, timeout, definedLogs;
+    var scope, httpBackend, worklog, timeout, definedLogs, uibModal, $q;
 
-    beforeEach(inject(function (_$controller_, $rootScope, $httpBackend, _currentEmployee_, _timeProvider_, $sce, _worklog_, $timeout, _definedLogs_) {
+
+    beforeEach(inject(function (_$controller_, $rootScope, $httpBackend, _currentEmployee_, _timeProvider_, $sce, _worklog_, $timeout, _definedLogs_, $uibModal, _$q_) {
         $controller = _$controller_;
         scope = $rootScope.$new();
         worklog = _worklog_;
         timeout = $timeout;
         definedLogs = _definedLogs_;
+        uibModal = $uibModal;
+        $q = _$q_;
         spyOn(_timeProvider_, 'getCurrentDate').and.returnValue(new Date(currentDateString));
         spyOn(_timeProvider_, 'moment').and.returnValue(moment(currentDateString, 'YYYY-MM-DD'));
         httpBackend = $httpBackend;
@@ -20,8 +24,16 @@ describe('Registration Controller should', function () {
         spyOn($sce, 'trustAsHtml').and.callFake(function (x) {
             return x;
         });
+
         spyOn(definedLogs, 'addLog');
-        
+
+        httpBackend.whenGET('http://localhost:8080/endpoints/v1/projects/').respond(200, [
+          'ProjectManhattan', 'Apollo'
+        ]);
+        var mockModalInstance = { result: $q.resolve() };
+        spyOn(mockModalInstance.result, 'then').and.callThrough();
+        spyOn(uibModal, 'open').and.returnValue(mockModalInstance);
+
     }));
 
     it('logs work to server and refreshes worklog', function () {
@@ -37,6 +49,54 @@ describe('Registration Controller should', function () {
         httpBackend.flush();
 
         expect(worklog.refresh).toHaveBeenCalled();
+    });
+
+    it('asks for confirmation when new project added', function () {
+        var mockModalInstance = { result: {then: function() {}} };
+        spyOn(mockModalInstance.result, 'then').and.callThrough();
+        uibModal.open = jasmine.createSpy().and.returnValue(mockModalInstance);
+        var controller = newRegistrationController();
+        userTypes('2h #ProjectManhattan #ProjectAlfa @2014/01/03');
+        httpBackend.expectGET('http://localhost:8080/endpoints/v1/projects/').respond(200, [
+          'ProjectManhattan'
+        ]);
+
+        controller.logWork();
+        httpBackend.flush();
+
+        expect(uibModal.open).toHaveBeenCalled();
+    });
+
+    it('logs work with new project when confirmed', function () {
+        var controller = newRegistrationController();
+        userTypes('2h #ProjectManhattan #ProjectAlfa @2014/01/03');
+        httpBackend.expectGET('http://localhost:8080/endpoints/v1/projects/').respond(200, [
+          'ProjectManhattan'
+        ]);
+        httpBackend.expectPOST("http://localhost:8080/endpoints/v1/employee/homer.simpson/work-log/entries", {
+          projectNames: ['ProjectManhattan', 'ProjectAlfa'],
+          workload: '2h',
+          day: '2014/01/03'
+        }).respond(200);
+
+        controller.logWork();
+        httpBackend.flush();
+    });
+
+    it('does not log work with new project when rejected', function () {
+        var mockModalInstance = { result: $q.reject() };
+        spyOn(mockModalInstance.result, 'then').and.callThrough();
+        uibModal.open = jasmine.createSpy().and.returnValue(mockModalInstance);
+        var controller = newRegistrationController();
+        userTypes('2h #ProjectManhattan #ProjectAlfa @2014/01/03');
+        httpBackend.expectGET('http://localhost:8080/endpoints/v1/projects/').respond(200, [
+          'ProjectManhattan'
+        ]);
+
+        controller.logWork();
+        httpBackend.flush();
+
+       expect(worklog.refresh).not.toHaveBeenCalled();
     });
 
     it('enables new projects when logging work', function () {
@@ -316,7 +376,7 @@ describe('Registration Controller should', function () {
             expect(controller.status).toBe('');
         });
 
-        
+
 
     });
 

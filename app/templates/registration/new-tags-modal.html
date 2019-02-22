@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h3>{{newTags.newTagNames.length > 1 ? 'Nowe tagi' : 'Nowy tag'}}</h3>
+</div>
+<div class="modal-body" shake-me>
+
+    <div>
+        Zaraz dodasz {{newTags.newTagNames.length > 1 ? 'nowe tagi' : 'nowy tag'}}: <b>{{newTags.newTagNames.join(', ')}}</b>. Upewnij się, że na pewno chcesz to zrobić!
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="newTags.cancel()">Odrzuć</button>
+    <button class="btn btn-primary" ng-click="newTags.ok()">Potwierdź</button>
+</div>      
